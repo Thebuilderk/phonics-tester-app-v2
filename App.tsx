@@ -5,7 +5,8 @@ import { StyleSheet, Text, View } from 'react-native';
 export default function App() {
   return (
     <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
+      {/* TODO: Implement the new UI component here */}
+      <Text>New UI placeholder - Ready for component implementation.</Text>
       <StatusBar style="auto" />
     </View>
   );
