@@ -246,14 +246,17 @@ const styles = StyleSheet.create({
   phaseSelector: {
     height: 60,
     marginBottom: 10,
+    width: '100%',
   },
   setSelector: {
     height: 60,
     marginBottom: 10,
+    width: '100%',
   },
   soundSelector: {
     height: 60,
     marginBottom: 20,
+    width: '100%',
   },
   listItem: {
     paddingVertical: 10,
