@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -8,7 +8,8 @@ import {
   StatusBar,
   TouchableOpacity,
   Image,
-  Dimensions,
+  Animated, // For animations
+  Easing, // For animation easing
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -30,6 +31,9 @@ const PHONICS_DATA: Sound[] = [
   { id: '3', grapheme: 'c', phoneme: '/k/', exampleWord: 'cat', image: 'https://via.placeholder.com/100x100/3357FF/FFFFFF?text=🐱' },
   { id: '4', grapheme: 'd', phoneme: '/d/', exampleWord: 'dog', image: 'https://via.placeholder.com/100x100/FF33FB/FFFFFF?text=🐶' },
   { id: '5', grapheme: 'e', phoneme: '/ɛ/', exampleWord: 'egg', image: 'https://via.placeholder.com/100x100/33FFF7/FFFFFF?text=🥚' },
+  { id: '6', grapheme: 'f', phoneme: '/f/', exampleWord: 'fish', image: 'https://via.placeholder.com/100x100/FFD700/FFFFFF?text=🐟' },
+  { id: '7', grapheme: 'g', phoneme: '/g/', exampleWord: 'grape', image: 'https://via.placeholder.com/100x100/800080/FFFFFF?text=🍇' },
+  { id: '8', grapheme: 'h', phoneme: '/h/', exampleWord: 'hat', image: 'https://via.placeholder.com/100x100/FF0000/FFFFFF?text=🎩' },
 ];
 
 const COLORS = {
@@ -47,6 +51,8 @@ const COLORS = {
   vibrantOrange: '#FF7F50', // A more vibrant orange for bottom nav
   teal: '#008080',
   pink: '#FFC0CB',
+  correctGreen: '#4CAF50', // Green for correct answers
+  incorrectRed: '#F44336', // Red for incorrect answers
 };
 
 // Icons - Using more playful placeholders
@@ -115,48 +121,127 @@ interface PhonicsGameScreenProps {
 
 const PhonicsGameScreen: React.FC<PhonicsGameScreenProps> = ({ onGoBack }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isRevealed, setIsRevealed] = useState(false);
-  const currentSound = PHONICS_DATA[currentIndex];
+  const [questionType, setQuestionType] = useState<'grapheme' | 'phoneme'>('grapheme'); // Test grapheme or phoneme
+  const [options, setOptions] = useState<string[]>([]);
+  const [selectedOption, setSelectedOption] = useState<string | null>(null);
+  const [feedback, setFeedback] = useState<'correct' | 'incorrect' | null>(null);
+
+  const scaleAnim = useRef(new Animated.Value(1)).current; // For button press animation
+
+  useEffect(() => {
+    generateQuestion();
+  }, [currentIndex, questionType]);
+
+  const generateQuestion = () => {
+    const currentSound = PHONICS_DATA[currentIndex];
+    const allOtherSounds = PHONICS_DATA.filter((_, idx) => idx !== currentIndex);
+
+    let correctOption: string;
+    let incorrectOptions: string[] = [];
+
+    if (questionType === 'grapheme') {
+      correctOption = currentSound.grapheme.toUpperCase();
+      incorrectOptions = allOtherSounds
+        .sort(() => 0.5 - Math.random())
+        .slice(0, 2) // Get 2 random incorrect graphemes
+        .map((s) => s.grapheme.toUpperCase());
+    } else { // questionType === 'phoneme'
+      correctOption = currentSound.phoneme;
+      incorrectOptions = allOtherSounds
+        .sort(() => 0.5 - Math.random())
+        .slice(0, 2) // Get 2 random incorrect phonemes
+        .map((s) => s.phoneme);
+    }
+
+    const newOptions = [correctOption, ...incorrectOptions].sort(() => 0.5 - Math.random());
+    setOptions(newOptions);
+    setSelectedOption(null);
+    setFeedback(null);
+  };
+
+  const handleOptionPress = (option: string) => {
+    setSelectedOption(option);
+    const currentSound = PHONICS_DATA[currentIndex];
+    let isCorrect: boolean;
+
+    if (questionType === 'grapheme') {
+      isCorrect = option === currentSound.grapheme.toUpperCase();
+    } else {
+      isCorrect = option === currentSound.phoneme;
+    }
+
+    if (isCorrect) {
+      setFeedback('correct');
+      // Play correct sound effect (not implemented yet)
+      Animated.sequence([
+        Animated.timing(scaleAnim, { toValue: 1.1, duration: 100, useNativeDriver: true }),
+        Animated.timing(scaleAnim, { toValue: 1, duration: 100, useNativeDriver: true }),
+      ]).start();
+    } else {
+      setFeedback('incorrect');
+      // Play incorrect sound effect (not implemented yet)
+      Animated.sequence([
+        Animated.timing(scaleAnim, { toValue: 0.9, duration: 100, useNativeDriver: true }),
+        Animated.timing(scaleAnim, { toValue: 1, duration: 100, useNativeDriver: true }),
+      ]).start();
+    }
+  };
 
   const handleNext = () => {
-    setIsRevealed(false);
     setCurrentIndex((prevIndex) => (prevIndex + 1) % PHONICS_DATA.length);
+    setQuestionType(questionType === 'grapheme' ? 'phoneme' : 'grapheme'); // Alternate question type
+    generateQuestion(); // Re-generate options for new index/type
   };
 
-  const handleReveal = () => {
-    setIsRevealed(true);
-  };
+  const currentSound = PHONICS_DATA[currentIndex];
 
   return (
     <View style={gameStyles.container}>
       <TouchableOpacity onPress={onGoBack} style={gameStyles.backButton}>
         <MaterialCommunityIcons name="arrow-left" size={30} color={COLORS.darkGray} />
       </TouchableOpacity>
-      <Text style={gameStyles.title}>Learn & Play Phonics!</Text>
+      <Text style={gameStyles.title}>Match the Sound!</Text>
 
-      <View style={gameStyles.card}>
+      <Animated.View style={[gameStyles.card, { transform: [{ scale: scaleAnim }] }]}>
         <Image source={{ uri: currentSound.image }} style={gameStyles.image} />
-        <Text style={gameStyles.grapheme}>{currentSound.grapheme.toUpperCase()}</Text>
-        {isRevealed && (
-          <View style={gameStyles.revealSection}>
-            <Text style={gameStyles.phoneme}>{currentSound.phoneme}</Text>
-            <Text style={gameStyles.exampleWord}>{currentSound.exampleWord}</Text>
-          </View>
+        {questionType === 'grapheme' ? (
+          <Text style={gameStyles.promptText}>Which letter makes this sound?</Text>
+        ) : (
+          <Text style={gameStyles.promptText}>What sound does '{currentSound.grapheme.toUpperCase()}' make?</Text>
         )}
+      </Animated.View>
+
+      <View style={gameStyles.optionsContainer}>
+        {options.map((option, index) => {
+          const isCorrect = (questionType === 'grapheme' && option === currentSound.grapheme.toUpperCase()) ||
+                          (questionType === 'phoneme' && option === currentSound.phoneme);
+          const isSelected = selectedOption === option;
+
+          return (
+            <TouchableOpacity
+              key={index}
+              style={[
+                gameStyles.optionButton,
+                isSelected && feedback === 'correct' && { backgroundColor: COLORS.correctGreen },
+                isSelected && feedback === 'incorrect' && { backgroundColor: COLORS.incorrectRed },
+                isSelected && feedback === 'incorrect' && !isCorrect && { borderWidth: 2, borderColor: COLORS.white }, // Highlight wrong choice
+                isSelected && feedback === 'incorrect' && isCorrect && { backgroundColor: COLORS.correctGreen }, // Show correct if selected
+                feedback && !isSelected && isCorrect && { borderWidth: 2, borderColor: COLORS.correctGreen }, // Show correct if not selected but is correct
+              ]}
+              onPress={() => !feedback && handleOptionPress(option)} // Disable press after feedback
+              disabled={!!feedback}
+            >
+              <Text style={gameStyles.optionText}>{option}</Text>
+            </TouchableOpacity>
+          );
+        })}
       </View>
 
-      <View style={gameStyles.buttonContainer}>
-        {!isRevealed && (
-          <TouchableOpacity style={gameStyles.actionButton} onPress={handleReveal}>
-            <Text style={gameStyles.actionButtonText}>Reveal Answer</Text>
-          </TouchableOpacity>
-        )}
-        {isRevealed && (
-          <TouchableOpacity style={gameStyles.actionButton} onPress={handleNext}>
-            <Text style={gameStyles.actionButtonText}>Next Word</Text>
-          </TouchableOpacity>
-        )}
-      </View>
+      {feedback && (
+        <TouchableOpacity style={gameStyles.nextButton} onPress={handleNext}>
+          <Text style={gameStyles.nextButtonText}>Next Challenge!</Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 };
@@ -168,7 +253,6 @@ export default function App() {
   const handleTabPress = (tab: 'home' | 'games' | 'stories' | 'myStuff') => {
     setActiveTab(tab);
     console.log(`Navigated to: ${tab}`);
-    // For now, only 'games' tab triggers the PhonicsGameScreen
     if (tab === 'games') {
       setCurrentScreen('learnAndPlay');
     } else {
@@ -178,7 +262,7 @@ export default function App() {
 
   const navigateToLearnAndPlay = () => {
     setCurrentScreen('learnAndPlay');
-    setActiveTab('games'); // Highlight games tab when in Learn & Play
+    setActiveTab('games');
   };
 
   const navigateHome = () => {
@@ -205,7 +289,7 @@ export default function App() {
           <TouchableOpacity onPress={() => console.log('Settings Pressed')}>
             <MaterialCommunityIcons
               name="cog"
-              size={30} // Slightly larger settings icon
+              size={30}
               color={COLORS.darkGray}
               style={styles.settingsIcon}
             />
@@ -275,11 +359,11 @@ const styles = StyleSheet.create({
   headerGradient: {
     paddingTop: StatusBar.currentHeight || 0,
     paddingHorizontal: 20,
-    paddingVertical: 18, // Increased vertical padding
-    borderBottomLeftRadius: 25, // More rounded
-    borderBottomRightRadius: 25, // More rounded
+    paddingVertical: 18,
+    borderBottomLeftRadius: 25,
+    borderBottomRightRadius: 25,
     shadowColor: COLORS.darkGray,
-    shadowOffset: { width: 0, height: 3 }, // More pronounced shadow
+    shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.25,
     shadowRadius: 5,
     elevation: 6,
@@ -290,18 +374,18 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   mascotIcon: {
-    width: 50, // Larger mascot
+    width: 50,
     height: 50,
     borderRadius: 25,
     marginRight: 10,
   },
   appWordmark: {
-    flex: 1, // Allows wordmark to take available space
-    fontSize: 26, // Larger font size
+    flex: 1,
+    fontSize: 26,
     fontWeight: 'bold',
     color: COLORS.darkGray,
     fontFamily: 'System', // Placeholder for playful font like 'Chewy-Regular'
-    textAlign: 'center', // Center wordmark
+    textAlign: 'center',
   },
   settingsIcon: {
     marginLeft: 10,
@@ -309,26 +393,26 @@ const styles = StyleSheet.create({
   contentFeed: {
     flex: 1,
     paddingHorizontal: 15,
-    paddingVertical: 25, // Increased vertical padding
+    paddingVertical: 25,
   },
   contentFeedContainer: {
     alignItems: 'center',
   },
   card: {
-    width: '90%', // Slightly narrower cards
-    borderRadius: 25, // More rounded
+    width: '90%',
+    borderRadius: 25,
     padding: 20,
-    marginBottom: 25, // More space between cards
+    marginBottom: 25,
     flexDirection: 'row',
     alignItems: 'center',
     shadowColor: COLORS.darkGray,
-    shadowOffset: { width: 0, height: 5 }, // More pronounced shadow
+    shadowOffset: { width: 0, height: 5 },
     shadowOpacity: 0.25,
     shadowRadius: 6,
     elevation: 10,
   },
   cardIcon: {
-    width: 70, // Larger icons
+    width: 70,
     height: 70,
     borderRadius: 35,
     marginRight: 20,
@@ -338,25 +422,25 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   cardTitle: {
-    fontSize: 22, // Larger title
+    fontSize: 22,
     fontWeight: 'bold',
     color: COLORS.darkGray,
     marginBottom: 5,
-    fontFamily: 'System', // Placeholder for playful font
+    fontFamily: 'System',
   },
   cardDescription: {
     fontSize: 15,
     color: COLORS.darkGray,
-    fontFamily: 'System', // Placeholder for playful font
+    fontFamily: 'System',
   },
   bottomNav: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    backgroundColor: COLORS.vibrantOrange, // More vibrant color
+    backgroundColor: COLORS.vibrantOrange,
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
-    height: 80, // Taller bottom nav
+    height: 80,
     shadowColor: COLORS.darkGray,
     shadowOffset: { width: 0, height: -3 },
     shadowOpacity: 0.25,
@@ -370,10 +454,11 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   bottomNavItemLabel: {
-    fontSize: 13, // Slightly larger label
+    fontSize: 13,
     fontWeight: 'bold',
     marginTop: 5,
-    fontFamily: 'System', // Placeholder for playful font
+    color: COLORS.darkGray,
+    fontFamily: 'System',
   },
 });
 
@@ -410,7 +495,7 @@ const gameStyles = StyleSheet.create({
   card: {
     backgroundColor: COLORS.white,
     borderRadius: 25,
-    padding: 30,
+    padding: 20,
     alignItems: 'center',
     shadowColor: COLORS.darkGray,
     shadowOffset: { width: 0, height: 6 },
@@ -418,59 +503,67 @@ const gameStyles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 12,
     width: '90%',
-    aspectRatio: 1, // Make card square
     justifyContent: 'center',
-    marginBottom: 40,
+    marginBottom: 30,
+    minHeight: 200, // Ensure card has minimum height
   },
   image: {
     width: 120,
     height: 120,
     borderRadius: 60,
-    marginBottom: 20,
+    marginBottom: 15,
     borderWidth: 4,
     borderColor: COLORS.pastelGreen,
   },
-  grapheme: {
-    fontSize: 70,
-    fontWeight: 'bold',
+  promptText: {
+    fontSize: 24,
+    fontWeight: '600',
     color: COLORS.darkGray,
     fontFamily: 'System',
+    textAlign: 'center',
   },
-  revealSection: {
-    marginTop: 20,
+  optionsContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    marginBottom: 20,
+  },
+  optionButton: {
+    backgroundColor: COLORS.sunshineYellow,
+    paddingVertical: 15,
+    paddingHorizontal: 25,
+    borderRadius: 25,
+    margin: 8,
+    shadowColor: COLORS.darkGray,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 6,
+    minWidth: 100,
     alignItems: 'center',
   },
-  phoneme: {
-    fontSize: 35,
-    color: COLORS.tomatoRed,
-    fontFamily: 'System',
-    marginBottom: 10,
-  },
-  exampleWord: {
-    fontSize: 40,
-    color: COLORS.teal,
-    fontFamily: 'System',
-    fontWeight: '600',
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    marginTop: 20,
-  },
-  actionButton: {
-    backgroundColor: COLORS.sunshineYellow,
-    paddingVertical: 18,
-    paddingHorizontal: 30,
-    borderRadius: 30,
-    shadowColor: COLORS.darkGray,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 5,
-    elevation: 8,
-  },
-  actionButtonText: {
+  optionText: {
     fontSize: 22,
     fontWeight: 'bold',
     color: COLORS.darkGray,
+    fontFamily: 'System',
+  },
+  nextButton: {
+    backgroundColor: COLORS.grassGreen,
+    paddingVertical: 18,
+    paddingHorizontal: 35,
+    borderRadius: 30,
+    marginTop: 20,
+    shadowColor: COLORS.darkGray,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.25,
+    shadowRadius: 5,
+    elevation: 8,
+  },
+  nextButtonText: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: COLORS.white,
     fontFamily: 'System',
   },
 });
