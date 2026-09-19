@@ -14,29 +14,30 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { registerRootComponent } from 'expo';
 
 // ── Types ──────────────────────────────────────────────
-interface Sound {
-  id: string;
-  grapheme: string;
-  phoneme: string;
-  phonemeIpa: string;
-  type: string;
-  keywords: string[];
-  exampleWords: { word: string; blendingPriority: number }[];
-  commonConfusions: string[];
-  troubleshootingTip: string;
-}
+// No specific types needed for this UI, but kept for context if they were used elsewhere
+// interface Sound {
+//   id: string;
+//   grapheme: string;
+//   phoneme: string;
+//   phonemeIpa: string;
+//   type: string;
+//   keywords: string[];
+//   exampleWords: { word: string; blendingPriority: number }[];
+//   commonConfusions: string[];
+//   troubleshootingTip: string;
+// }
 
-interface PhraseSet {
-  id: string;
-  setNumber: number;
-  label: string;
-  sounds: Sound[];
-}
+// interface PhraseSet {
+//   id: string;
+//   setNumber: number;
+//   label: string;
+//   sounds: Sound[];
+// }
 
-interface Phase {
-  label: string;
-  sets: PhraseSet[];
-}
+// interface Phase {
+//   label: string;
+//   sets: PhraseSet[];
+// }
 
 // ── Data (from phonics-phase1-2-structure.json) ────────
 const COLORS = {
@@ -146,21 +147,21 @@ export default function App() {
           description="Interactive phonics lessons & games."
           backgroundColor={COLORS.pastelGreen}
           icon={bookIcon}
-          onPress={() => console.log('Learn & Play Pressed')}
+          onPress={() => handleTabPress('games')} // Link to games tab
         />
         <CategoryCard
           title="Story Time"
           description="Read-along adventures & bedtime stories."
           backgroundColor={COLORS.sunshineYellow}
           icon={castleIcon}
-          onPress={() => console.log('Story Time Pressed')}
+          onPress={() => handleTabPress('stories')} // Link to stories tab
         />
         <CategoryCard
           title="My Progress"
           description="Track your phonics journey!"
           backgroundColor={COLORS.pastelPurple}
           icon={trophyIcon}
-          onPress={() => console.log('My Progress Pressed')}
+          onPress={() => handleTabPress('myStuff')} // Link to myStuff tab
         />
       </ScrollView>
 
@@ -296,63 +297,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginTop: 4,
   },
-});
-
-export default function App() {
-  const [selectedPhase, setSelectedPhase] = useState<Phase | null>(null);
-  const [selectedSet, setSelectedSet] = useState<PhraseSet | null>(null);
-  const [selectedSound, setSelectedSound] = useState<Sound | null>(null);
-
-  const renderPhaseItem = ({ item }: { item: Phase }) => (
-    <TouchableOpacity
-      style={[styles.listItem, selectedPhase?.label === item.label && styles.selectedListItem]}
-      onPress={() => {
-        setSelectedPhase(item);
-        setSelectedSet(null);
-        setSelectedSound(null);
-      }}
-    >
-      <Text style={styles.listItemText}>{item.label}</Text>
-    </TouchableOpacity>
-  );
-
-  const renderSetItem = ({ item }: { item: PhraseSet }) => (
-    <TouchableOpacity
-      style={[styles.listItem, selectedSet?.id === item.id && styles.selectedListItem]}
-      onPress={() => {
-        setSelectedSet(item);
-        setSelectedSound(null);
-      }}
-    >
-      <Text style={styles.listItemText}>{item.label}</Text>
-    </TouchableOpacity>
-  );
-
-  const renderSoundItem = ({ item }: { item: Sound }) => (
-    <TouchableOpacity
-      style={[styles.listItem, selectedSound?.id === item.id && styles.selectedListItem]}
-      onPress={() => setSelectedSound(item)}
-    >
-      <Text style={styles.listItemText}>{item.grapheme} {item.phoneme}</Text>
-    </TouchableOpacity>
-  );
-
-  return (
-    <SafeAreaView style={styles.safeArea}>
-      <StatusBar barStyle="dark-content" />
-      <View style={styles.container}>
-
-      </View>
-    </SafeAreaView>
-  );
-}
-
-const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: '#f8f8f8',
-  },
-
 });
 
 registerRootComponent(App);
