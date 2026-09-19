@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -10,10 +10,18 @@ import {
   Image,
   Animated, // For animations
   Easing, // For animation easing
+  ActivityIndicator, // For font loading
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useFonts } from 'expo-font';
+import { Audio } from 'expo-av';
+import * as SplashScreen from 'expo-splash-screen'; // Keep the splash screen visible
 import { registerRootComponent } from 'expo';
+
+
+// Keep the splash screen visible while we fetch resources
+SplashScreen.preventAutoHideAsync();
 
 // ── Types ──────────────────────────────────────────────
 interface Sound {
@@ -53,6 +61,8 @@ const COLORS = {
   pink: '#FFC0CB',
   correctGreen: '#4CAF50', // Green for correct answers
   incorrectRed: '#F44336', // Red for incorrect answers
+  // New colors from design for consistency
+  creamyWhite: '#FFFDD0', // For bottom nav background
 };
 
 // Icons - Using more playful placeholders
@@ -127,6 +137,47 @@ const PhonicsGameScreen: React.FC<PhonicsGameScreenProps> = ({ onGoBack }) => {
   const [feedback, setFeedback] = useState<'correct' | 'incorrect' | null>(null);
 
   const scaleAnim = useRef(new Animated.Value(1)).current; // For button press animation
+  const correctSound = useRef<Audio.Sound | null>(null);
+  const incorrectSound = useRef<Audio.Sound | null>(null);
+
+  const loadSounds = async () => {
+    try {
+      const { sound: correctS } = await Audio.Sound.createAsync(
+        require('./assets/audio/correct.mp3') // Assuming path
+      );
+      correctSound.current = correctS;
+      const { sound: incorrectS } = await Audio.Sound.createAsync(
+        require('./assets/audio/incorrect.mp3') // Assuming path
+      );
+      incorrectSound.current = incorrectS;
+    } catch (error) {
+      console.error('Failed to load sounds', error);
+    }
+  };
+
+  const playCorrectSound = async () => {
+    try {
+      await correctSound.current?.replayAsync();
+    } catch (error) {
+      console.error('Failed to play correct sound', error);
+    }
+  };
+
+  const playIncorrectSound = async () => {
+    try {
+      await incorrectSound.current?.replayAsync();
+    } catch (error) {
+      console.error('Failed to play incorrect sound', error);
+    }
+  };
+
+  useEffect(() => {
+    loadSounds();
+    return () => {
+      correctSound.current?.unloadAsync();
+      incorrectSound.current?.unloadAsync();
+    };
+  }, []);
 
   useEffect(() => {
     generateQuestion();
@@ -172,14 +223,14 @@ const PhonicsGameScreen: React.FC<PhonicsGameScreenProps> = ({ onGoBack }) => {
 
     if (isCorrect) {
       setFeedback('correct');
-      // Play correct sound effect (not implemented yet)
+      playCorrectSound();
       Animated.sequence([
         Animated.timing(scaleAnim, { toValue: 1.1, duration: 100, useNativeDriver: true }),
         Animated.timing(scaleAnim, { toValue: 1, duration: 100, useNativeDriver: true }),
       ]).start();
     } else {
       setFeedback('incorrect');
-      // Play incorrect sound effect (not implemented yet)
+      playIncorrectSound();
       Animated.sequence([
         Animated.timing(scaleAnim, { toValue: 0.9, duration: 100, useNativeDriver: true }),
         Animated.timing(scaleAnim, { toValue: 1, duration: 100, useNativeDriver: true }),
@@ -190,7 +241,7 @@ const PhonicsGameScreen: React.FC<PhonicsGameScreenProps> = ({ onGoBack }) => {
   const handleNext = () => {
     setCurrentIndex((prevIndex) => (prevIndex + 1) % PHONICS_DATA.length);
     setQuestionType(questionType === 'grapheme' ? 'phoneme' : 'grapheme'); // Alternate question type
-    generateQuestion(); // Re-generate options for new index/type
+    // generateQuestion will be called by useEffect due to currentIndex/questionType change
   };
 
   const currentSound = PHONICS_DATA[currentIndex];
@@ -224,9 +275,7 @@ const PhonicsGameScreen: React.FC<PhonicsGameScreenProps> = ({ onGoBack }) => {
                 gameStyles.optionButton,
                 isSelected && feedback === 'correct' && { backgroundColor: COLORS.correctGreen },
                 isSelected && feedback === 'incorrect' && { backgroundColor: COLORS.incorrectRed },
-                isSelected && feedback === 'incorrect' && !isCorrect && { borderWidth: 2, borderColor: COLORS.white }, // Highlight wrong choice
-                isSelected && feedback === 'incorrect' && isCorrect && { backgroundColor: COLORS.correctGreen }, // Show correct if selected
-                feedback && !isSelected && isCorrect && { borderWidth: 2, borderColor: COLORS.correctGreen }, // Show correct if not selected but is correct
+                feedback && isCorrect && !isSelected && { borderWidth: 3, borderColor: COLORS.correctGreen }, // Highlight correct answer if wrong choice was made
               ]}
               onPress={() => !feedback && handleOptionPress(option)} // Disable press after feedback
               disabled={!!feedback}
@@ -247,6 +296,25 @@ const PhonicsGameScreen: React.FC<PhonicsGameScreenProps> = ({ onGoBack }) => {
 };
 
 export default function App() {
+  const [fontsLoaded] = useFonts({
+    'Chewy-Regular': require('./assets/fonts/Chewy-Regular.ttf'), // Assuming font path
+  });
+
+  const onLayoutRootView = useCallback(async () => {
+    if (fontsLoaded) {
+      await SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded]);
+
+  if (!fontsLoaded) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color={COLORS.skyBlue} />
+        <Text style={{ marginTop: 10 }}>Loading Lana Phonics Tester...</Text>
+      </View>
+    );
+  }
+
   const [activeTab, setActiveTab] = useState<'home' | 'games' | 'stories' | 'myStuff'>('home');
   const [currentScreen, setCurrentScreen] = useState<'home' | 'learnAndPlay'>('home');
 
@@ -272,7 +340,7 @@ export default function App() {
 
   if (currentScreen === 'learnAndPlay') {
     return (
-      <SafeAreaView style={styles.safeArea}>
+      <SafeAreaView style={styles.safeArea} onLayout={onLayoutRootView}>
         <StatusBar barStyle="dark-content" />
         <PhonicsGameScreen onGoBack={navigateHome} />
       </SafeAreaView>
@@ -280,7 +348,7 @@ export default function App() {
   }
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={styles.safeArea} onLayout={onLayoutRootView}>
       <StatusBar barStyle="dark-content" />
       <LinearGradient colors={[COLORS.skyBlue, COLORS.pastelBlue]} style={styles.headerGradient}>
         <View style={styles.headerContent}>
@@ -308,7 +376,7 @@ export default function App() {
         <CategoryCard
           title="Story Time"
           description="Read-along adventures & bedtime stories."
-          backgroundColor={COLORS.sunshineYellow}
+          backgroundColor={COLORS.sunshineYellow} // Changed to sunshineYellow for consistency
           icon={castleIcon}
           onPress={() => console.log('Story Time Pressed')} // Placeholder
         />
@@ -384,7 +452,7 @@ const styles = StyleSheet.create({
     fontSize: 26,
     fontWeight: 'bold',
     color: COLORS.darkGray,
-    fontFamily: 'System', // Placeholder for playful font like 'Chewy-Regular'
+    fontFamily: 'Chewy-Regular', // Applied font
     textAlign: 'center',
   },
   settingsIcon: {
@@ -426,18 +494,18 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: COLORS.darkGray,
     marginBottom: 5,
-    fontFamily: 'System',
+    fontFamily: 'Chewy-Regular', // Applied font
   },
   cardDescription: {
     fontSize: 15,
     color: COLORS.darkGray,
-    fontFamily: 'System',
+    fontFamily: 'Chewy-Regular', // Applied font
   },
   bottomNav: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    backgroundColor: COLORS.vibrantOrange,
+    backgroundColor: COLORS.vibrantOrange, // Matching design
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
     height: 80,
@@ -457,8 +525,8 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: 'bold',
     marginTop: 5,
-    color: COLORS.darkGray,
-    fontFamily: 'System',
+    color: COLORS.darkGray, // Default to darkGray, white for focused
+    fontFamily: 'Chewy-Regular', // Applied font
   },
 });
 
@@ -489,7 +557,7 @@ const gameStyles = StyleSheet.create({
     fontWeight: 'bold',
     color: COLORS.darkGray,
     marginBottom: 30,
-    fontFamily: 'System',
+    fontFamily: 'Chewy-Regular', // Applied font
     textAlign: 'center',
   },
   card: {
@@ -519,7 +587,7 @@ const gameStyles = StyleSheet.create({
     fontSize: 24,
     fontWeight: '600',
     color: COLORS.darkGray,
-    fontFamily: 'System',
+    fontFamily: 'Chewy-Regular', // Applied font
     textAlign: 'center',
   },
   optionsContainer: {
@@ -546,7 +614,7 @@ const gameStyles = StyleSheet.create({
     fontSize: 22,
     fontWeight: 'bold',
     color: COLORS.darkGray,
-    fontFamily: 'System',
+    fontFamily: 'Chewy-Regular', // Applied font
   },
   nextButton: {
     backgroundColor: COLORS.grassGreen,
@@ -564,7 +632,7 @@ const gameStyles = StyleSheet.create({
     fontSize: 22,
     fontWeight: 'bold',
     color: COLORS.white,
-    fontFamily: 'System',
+    fontFamily: 'Chewy-Regular', // Applied font
   },
 });
 
