@@ -141,7 +141,7 @@ export default function App() {
       {/* CUSTOM HEADER AREA */}
       <LinearGradient colors={['#E8F5E9', '#C5E1A5']} style={styles.topHeader}>
         <View style={styles.headerLeft}>
-          <Image source={require('./assets/sun_logo.png')} style={styles.sunIcon} />
+          <Image source={require('./assets/assets/sun_logo.png')} style={styles.sunIcon} />
           <View>
             <Text style={styles.brandTitle}>LANA PHONICS</Text>
             <Text style={styles.brandSub}>TESTER UK</Text>

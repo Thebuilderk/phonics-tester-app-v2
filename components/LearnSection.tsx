@@ -11,20 +11,20 @@ const LearnSection: React.FC<LearnSectionProps> = ({ onProgressPress, onGemsPres
   return (
     <View style={styles.learnOptionsContainer}> 
       <TouchableOpacity style={styles.optionCard} onPress={() => console.log("Roadmap Pressed")}>
-        <Image source={require('../assets/treehouse_phase2.png')} style={styles.roadmapIcon} />
-        <Image source={require('../assets/rocket_phase5.png')} style={styles.roadmapIcon} />
+        <Image source={require('../assets/assets/treehouse_phase2.png')} style={styles.roadmapIcon} />
+        <Image source={require('../assets/assets/rocket_phase5.png')} style={styles.roadmapIcon} />
         <Text style={styles.optionText}>Roadmap</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.optionCard} onPress={onProgressPress}>
-        <Image source={require('../assets/icon_progress.png')} style={styles.optionIcon} />
+        <Image source={require('../assets/assets/icon_progress.png')} style={styles.optionIcon} />
         <Text style={styles.optionText}>PROGRESS</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.optionCard} onPress={onGemsPress}>
-        <Image source={require('../assets/icon_gems.png')} style={styles.optionIcon} />
+        <Image source={require('../assets/assets/icon_gems.png')} style={styles.optionIcon} />
         <Text style={styles.optionText}>GEMS</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.optionCard} onPress={onRewardsPress}>
-        <Image source={require('../assets/icon_rewards.png')} style={styles.optionIcon} />
+        <Image source={require('../assets/assets/icon_rewards.png')} style={styles.optionIcon} />
         <Text style={styles.optionText}>REWARDS</Text>
       </TouchableOpacity>
     </View>

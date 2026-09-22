@@ -35,7 +35,7 @@ const TestSection: React.FC<TestSectionProps> = ({
       <Text style={styles.sectionTitle}>TEST</Text>
       <Text style={styles.testWord}>{currentWord.word}</Text>
       <Text style={styles.scoreText}>{score}/{PHONICS_CURRICULUM.length}</Text> {/* Assuming PHONICS_CURRICULUM is accessible or passed */}
-      <Animated.Image source={require('../assets/zorgo_mascot.png')} style={[styles.mascot, { transform: [{ translateY: mascotAnim }] }]} />
+      <Animated.Image source={require('../assets/assets/zorgo_mascot.png')} style={[styles.mascot, { transform: [{ translateY: mascotAnim }] }]} />
       <TouchableOpacity style={styles.startTestButton} onPress={onStartTest}>
         <Text style={styles.startTestButtonText}>START TEST</Text>
       </TouchableOpacity>
