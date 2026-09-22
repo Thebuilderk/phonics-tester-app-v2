@@ -1,0 +1,209 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background-color: #f0f8ff; /* Light blue background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    color: #333;
+}
+
+.container {
+    background-color: #fff;
+    border-radius: 20px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px; /* Typical phone width */
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Full height on small screens */
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background-color: #ffd700; /* Gold color for header */
+    border-bottom: 5px solid #ffa500; /* Orange border */
+}
+
+.logo {
+    height: 50px;
+}
+
+.avatar-customizer {
+    display: flex;
+    align-items: center;
+}
+
+.avatar-example {
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    margin-right: -10px; /* Overlap avatars */
+    border: 2px solid #fff;
+    background-color: #eee;
+}
+
+.customize-button {
+    background-color: #4CAF50; /* Green */
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 8px 12px;
+    font-size: 0.8em;
+    cursor: pointer;
+    margin-left: 15px;
+    box-shadow: 0 4px #388E3C;
+}
+
+.main-content {
+    flex-grow: 1;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    background-image: url('assets/bg_landscape.png'); /* Landscape background */
+    background-size: cover;
+    background-position: center;
+}
+
+.learn-section, .test-section {
+    background-color: rgba(255, 255, 255, 0.9); /* Slightly transparent white */
+    border-radius: 15px;
+    padding: 15px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.learn-section h2, .test-section h2 {
+    color: #8a2be2; /* Blue violet */
+    margin-top: 0;
+    font-size: 1.5em;
+}
+
+.learn-options {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.option-card {
+    background-color: #e0ffff; /* Light cyan */
+    border-radius: 10px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 3px #afeeee; /* Pale turquoise shadow */
+    transition: transform 0.2s;
+}
+
+.option-card:active {
+    transform: translateY(2px);
+    box-shadow: 0 1px #afeeee;
+}
+
+.option-card .phase-icon {
+    height: 60px;
+    margin-bottom: 5px;
+}
+
+.option-card .option-icon {
+    height: 50px;
+    margin-bottom: 5px;
+}
+
+.roadmap {
+    grid-column: span 2;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.roadmap .phase-icon {
+    height: 80px;
+}
+
+.roadmap span {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #4682b4; /* Steel blue */
+}
+
+.test-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.test-word {
+    font-size: 3em;
+    font-weight: bold;
+    color: #ff4500; /* Orange red */
+    margin: 0;
+}
+
+.score {
+    font-size: 1.2em;
+    color: #555;
+}
+
+.zorgo-mascot {
+    height: 120px;
+    margin: 10px 0;
+}
+
+.encouragement {
+    font-size: 1.5em;
+    color: #8a2be2; /* Blue violet */
+    font-weight: bold;
+    margin: 0;
+}
+
+.start-test-button {
+    background-color: #4CAF50; /* Green */
+    color: white;
+    border: none;
+    border-radius: 30px;
+    padding: 15px 30px;
+    font-size: 1.5em;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 6px #388E3C;
+    transition: transform 0.2s;
+}
+
+.start-test-button:active {
+    transform: translateY(3px);
+    box-shadow: 0 3px #388E3C;
+}
+
+.bottom-nav {
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 0;
+    background-color: #8a2be2; /* Blue violet */
+    border-top: 5px solid #6a0dad; /* Darker blue violet */
+}
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: #fff;
+    font-size: 0.9em;
+    font-weight: bold;
+}
+
+.nav-item img {
+    height: 30px;
+    margin-bottom: 5px;
+}
