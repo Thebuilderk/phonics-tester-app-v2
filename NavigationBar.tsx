@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 
-export type TabType = 'Home' | 'Learn' | 'Test' | 'Profile';
+export type TabType = 'Home' | 'Games' | 'Stories' | 'My Stuff';
 
 interface NavigationBarProps {
   activeTab: TabType;
@@ -10,10 +10,10 @@ interface NavigationBarProps {
 
 export default function NavigationBar({ activeTab, setActiveTab }: NavigationBarProps) {
   const tabs: { key: TabType; icon: string; label: string }[] = [
-    { key: 'Home', icon: '🏡', label: 'HOME' },
-    { key: 'Learn', icon: '🎮', label: 'GAMES' },
-    { key: 'Test', icon: '📖', label: 'STORIES' },
-    { key: 'Profile', icon: '🎒', label: 'MY STUFF' },
+    { key: 'Home', icon: '🏠', label: 'HOME' },
+    { key: 'Games', icon: '🎲', label: 'GAMES' },
+    { key: 'Stories', icon: '📚', label: 'STORIES' },
+    { key: 'My Stuff', icon: '🎒', label: 'MY STUFF' },
   ];
 
   return (
