@@ -18,7 +18,11 @@ import { Audio } from 'expo-av';
 import { registerRootComponent } from 'expo';
 import * as SplashScreen from 'expo-splash-screen';
 import { useFonts, Chewy_400Regular } from '@expo-google-fonts/chewy';
-import { LinearGradient } from 'expo-linear-gradient';
+
+// IMPORT CUSTOM COMPONENTS FROM ROOT DIRECTORY
+import Header from './Header';
+import RewardsBar from './RewardsBar';
+import NavigationBar, { TabType } from './NavigationBar';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -101,7 +105,7 @@ export default function App() {
   const { width } = useWindowDimensions();
   const isTablet = width >= 768;
 
-  const [activeTab, setActiveTab] = useState<'Home' | 'Learn' | 'Test' | 'Profile'>('Home');
+  const [activeTab, setActiveTab] = useState<TabType>('Home');
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [soundObject, setSoundObject] = useState<Audio.Sound | null>(null);
@@ -153,28 +157,8 @@ export default function App() {
     <SafeAreaView style={styles.container} onLayout={onLayoutRootView}>
       <StatusBar barStyle="dark-content" backgroundColor="#C5E1A5" />
 
-      {/* TOP BRAND HEADER */}
-      <LinearGradient colors={['#E8F5E9', '#C5E1A5']} style={styles.topHeader}>
-        <View style={styles.headerLeft}>
-          <Text style={styles.sunIcon}>☀️</Text>
-          <View>
-            <Text style={styles.brandTitle}>LANA PHONICS</Text>
-            <Text style={styles.brandSub}>TESTER UK</Text>
-          </View>
-        </View>
-
-        <View style={styles.avatarRow}>
-          <TouchableOpacity style={styles.avatarPill}>
-            <Text style={styles.avatarIcon}>🦊</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.avatarPill}>
-            <Text style={styles.avatarIcon}>🦉</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.avatarPill}>
-            <Text style={styles.avatarIcon}>🤖</Text>
-          </TouchableOpacity>
-        </View>
-      </LinearGradient>
+      {/* REPLACED: TOP BRAND HEADER */}
+      <Header onAvatarPress={(avatar) => console.log('Avatar pressed:', avatar)} />
 
       {/* MAIN CONTENT AREA */}
       <ScrollView contentContainerStyle={styles.scrollBody} showsVerticalScrollIndicator={false}>
@@ -199,20 +183,12 @@ export default function App() {
                 </View>
               </View>
 
-              <View style={styles.quickNavRow}>
-                <TouchableOpacity style={styles.quickBtn} onPress={() => setActiveTab('Learn')}>
-                  <Text style={styles.quickIcon}>📖</Text>
-                  <Text style={styles.quickText}>PROGRESS</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.quickBtn}>
-                  <Text style={styles.quickIcon}>💎</Text>
-                  <Text style={styles.quickText}>GEMS</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.quickBtn}>
-                  <Text style={styles.quickIcon}>🎁</Text>
-                  <Text style={styles.quickText}>REWARDS</Text>
-                </TouchableOpacity>
-              </View>
+              {/* REPLACED: REWARDS & QUICK NAV BAR */}
+              <RewardsBar
+                onProgressPress={() => setActiveTab('Learn')}
+                onGemsPress={() => console.log('Gems clicked')}
+                onRewardsPress={() => console.log('Rewards clicked')}
+              />
             </View>
 
             {/* TEST SECTION CARD */}
@@ -298,28 +274,8 @@ export default function App() {
         )}
       </ScrollView>
 
-      {/* BOTTOM NAVIGATION DOCK */}
-      <View style={styles.bottomDock}>
-        <TouchableOpacity style={[styles.dockItem, activeTab === 'Home' && styles.dockActive]} onPress={() => setActiveTab('Home')}>
-          <Text style={styles.dockIcon}>🏡</Text>
-          <Text style={styles.dockLabel}>HOME</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={[styles.dockItem, activeTab === 'Learn' && styles.dockActive]} onPress={() => setActiveTab('Learn')}>
-          <Text style={styles.dockIcon}>🎮</Text>
-          <Text style={styles.dockLabel}>GAMES</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={[styles.dockItem, activeTab === 'Test' && styles.dockActive]} onPress={() => setActiveTab('Test')}>
-          <Text style={styles.dockIcon}>📖</Text>
-          <Text style={styles.dockLabel}>STORIES</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={[styles.dockItem, activeTab === 'Profile' && styles.dockActive]} onPress={() => setActiveTab('Profile')}>
-          <Text style={styles.dockIcon}>🎒</Text>
-          <Text style={styles.dockLabel}>MY STUFF</Text>
-        </TouchableOpacity>
-      </View>
+      {/* REPLACED: BOTTOM NAVIGATION DOCK */}
+      <NavigationBar activeTab={activeTab} setActiveTab={setActiveTab} />
     </SafeAreaView>
   );
 }
@@ -329,28 +285,6 @@ registerRootComponent(App);
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#E0F2F1' },
   centerContainer: { flex: 1, justifyContent: 'center', alignItems: 'center' },
-  topHeader: {
-    flexDirection: 'row',
-    justify: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderBottomLeftRadius: 24,
-    borderBottomRightRadius: 24,
-  },
-  headerLeft: { flexDirection: 'row', alignItems: 'center' },
-  sunIcon: { fontSize: 28, marginRight: 8 },
-  brandTitle: { fontSize: 20, fontFamily: 'Chewy-Regular', color: '#0288D1' },
-  brandSub: { fontSize: 10, fontWeight: '800', color: '#FF6F00', marginTop: -2 },
-  avatarRow: { flexDirection: 'row' },
-  avatarPill: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 16,
-    padding: 6,
-    marginLeft: 6,
-    elevation: 2,
-  },
-  avatarIcon: { fontSize: 18 },
   scrollBody: { paddingHorizontal: 14, paddingTop: 14, paddingBottom: 90 },
   dashboardGrid: { flexDirection: 'column' },
   dashboardTablet: { flexDirection: 'row', justifyContent: 'space-between' },
@@ -381,20 +315,6 @@ const styles = StyleSheet.create({
   activePhase: { backgroundColor: '#E3F2FD', borderWidth: 2, borderColor: '#29B6F6' },
   phaseText: { fontSize: 12, fontWeight: 'bold', color: '#37474F', marginTop: 4 },
   pathDot: { fontSize: 20, color: '#B0BEC5', marginHorizontal: 12 },
-  quickNavRow: { flexDirection: 'row', justifyContent: 'space-around', marginTop: 8 },
-  quickBtn: {
-    backgroundColor: '#FFF8E1',
-    borderWidth: 2,
-    borderColor: '#FFE082',
-    borderRadius: 16,
-    paddingVertical: 8,
-    paddingHorizontal: 10,
-    alignItems: 'center',
-    flex: 1,
-    marginHorizontal: 3,
-  },
-  quickIcon: { fontSize: 18 },
-  quickText: { fontSize: 9, fontWeight: 'bold', color: '#E65100', marginTop: 2 },
   testDisplayContainer: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   wordDisplayBox: {
     borderWidth: 2,
@@ -442,21 +362,4 @@ const styles = StyleSheet.create({
   bigWord: { fontSize: 48, fontFamily: 'Chewy-Regular', color: '#37474F', marginBottom: 20 },
   actionBtnGreen: { backgroundColor: '#66BB6A', paddingHorizontal: 24, paddingVertical: 12, borderRadius: 20 },
   btnTextWhite: { color: '#FFFFFF', fontWeight: 'bold', fontSize: 14 },
-  bottomDock: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    height: 65,
-    backgroundColor: '#FFF8E1',
-    flexDirection: 'row',
-    justify: 'space-around',
-    alignItems: 'center',
-    borderTopWidth: 2,
-    borderTopColor: '#FFE082',
-  },
-  dockItem: { alignItems: 'center', padding: 6, borderRadius: 12 },
-  dockActive: { backgroundColor: '#FFE082' },
-  dockIcon: { fontSize: 18 },
-  dockLabel: { fontSize: 9, fontWeight: '800', color: '#8D6E63', marginTop: 2 },
 });
