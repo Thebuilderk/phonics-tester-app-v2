@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, Image } from 'react-native';
 
 export type TabType = 'Home' | 'Games' | 'Stories' | 'My Stuff';
 
@@ -9,11 +9,11 @@ interface NavigationBarProps {
 }
 
 export default function NavigationBar({ activeTab, setActiveTab }: NavigationBarProps) {
-  const tabs: { key: TabType; icon: string; label: string }[] = [
-    { key: 'Home', icon: '🏠', label: 'HOME' },
-    { key: 'Games', icon: '🎲', label: 'GAMES' },
-    { key: 'Stories', icon: '📚', label: 'STORIES' },
-    { key: 'My Stuff', icon: '🎒', label: 'MY STUFF' },
+  const tabs: { key: TabType; icon: any; label: string }[] = [
+    { key: 'Home', icon: require('./assets/nav_home.png'), label: 'HOME' },
+    { key: 'Games', icon: require('./assets/nav_games.png'), label: 'GAMES' },
+    { key: 'Stories', icon: require('./assets/nav_stories.png'), label: 'STORIES' },
+    { key: 'My Stuff', icon: require('./assets/nav_stuff.png'), label: 'MY STUFF' },
   ];
 
   return (
@@ -26,7 +26,7 @@ export default function NavigationBar({ activeTab, setActiveTab }: NavigationBar
             style={[styles.dockItem, isActive && styles.dockActive]}
             onPress={() => setActiveTab(tab.key)}
           >
-            <Text style={styles.dockIcon}>{tab.icon}</Text>
+            <Image source={tab.icon} style={styles.dockIcon} />
             <Text style={styles.dockLabel}>{tab.label}</Text>
           </TouchableOpacity>
         );
@@ -41,16 +41,32 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    height: 65,
-    backgroundColor: '#FFF8E1',
+    height: 75, // Increased height for icons and labels
+    backgroundColor: '#8a2be2', // Blue violet
     flexDirection: 'row',
-    justify: 'space-around',
+    justifyContent: 'space-around',
     alignItems: 'center',
-    borderTopWidth: 2,
-    borderTopColor: '#FFE082',
+    borderTopWidth: 5,
+    borderTopColor: '#6a0dad', // Darker blue violet
   },
-  dockItem: { alignItems: 'center', padding: 6, borderRadius: 12 },
-  dockActive: { backgroundColor: '#FFE082' },
-  dockIcon: { fontSize: 18 },
-  dockLabel: { fontSize: 9, fontWeight: '800', color: '#8D6E63', marginTop: 2 },
+  dockItem: {
+    alignItems: 'center',
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    borderRadius: 12,
+  },
+  dockActive: {
+    backgroundColor: '#9370DB', // Medium Purple for active tab
+  },
+  dockIcon: {
+    width: 30,
+    height: 30,
+    resizeMode: 'contain',
+    marginBottom: 2,
+  },
+  dockLabel: {
+    fontSize: 10,
+    fontWeight: 'bold',
+    color: '#FFFFFF',
+  },
 });

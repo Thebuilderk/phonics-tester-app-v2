@@ -1,6 +1,5 @@
 import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, Image } from 'react-native';
-import RewardsBar from '../RewardsBar'; // Assuming RewardsBar is in the parent directory or needs to be moved
 
 interface LearnSectionProps {
   onProgressPress: () => void;
@@ -10,130 +9,63 @@ interface LearnSectionProps {
 
 const LearnSection: React.FC<LearnSectionProps> = ({ onProgressPress, onGemsPress, onRewardsPress }) => {
   return (
-    <View style={styles.mainCard}>
-      <View style={styles.cardHeaderBanner}>
-        <Text style={styles.cardHeaderTitle}>LEARN</Text>
-      </View>
-      
-      <Text style={styles.roadmapSub}>Phonics Roadmap</Text>
-
-      <View style={styles.roadmapFlow}>
-        <View style={styles.phaseBadgeContainer}>
-          <Image source={require('../assets/treehouse_phase2.png')} style={styles.illustrationImage} />
-          <Text style={styles.phaseText}>Phase 2</Text>
-        </View>
-
-        <View style={styles.pathDashedLine} />
-
-        <View style={styles.phaseBadgeContainer}>
-          <Image source={require('../assets/rocket_phase5.png')} style={styles.illustrationImage} />
-          <Text style={styles.phaseText}>Phase 5</Text>
-        </View>
-      </View>
-
-      <RewardsBar
-        onProgressPress={onProgressPress}
-        onGemsPress={onGemsPress}
-        onRewardsPress={onRewardsPress}
-      />
-
-      <View style={styles.learnOptions}>
-        <TouchableOpacity onPress={onProgressPress} style={styles.learnOptionButton}>
-          <Image source={require('../assets/icon_progress.png')} style={styles.learnOptionIcon} />
-          <Text style={styles.learnOptionText}>PROGRESS</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={onGemsPress} style={styles.learnOptionButton}>
-          <Image source={require('../assets/icon_gems.png')} style={styles.learnOptionIcon} />
-          <Text style={styles.learnOptionText}>GEMS</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={onRewardsPress} style={styles.learnOptionButton}>
-          <Image source={require('../assets/icon_rewards.png')} style={styles.learnOptionIcon} />
-          <Text style={styles.learnOptionText}>REWARDS</Text>
-        </TouchableOpacity>
-      </View>
-
+    <View style={styles.learnOptionsContainer}> 
+      <TouchableOpacity style={styles.optionCard} onPress={() => console.log("Roadmap Pressed")}>
+        <Image source={require('../assets/treehouse_phase2.png')} style={styles.roadmapIcon} />
+        <Image source={require('../assets/rocket_phase5.png')} style={styles.roadmapIcon} />
+        <Text style={styles.optionText}>Roadmap</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.optionCard} onPress={onProgressPress}>
+        <Image source={require('../assets/icon_progress.png')} style={styles.optionIcon} />
+        <Text style={styles.optionText}>PROGRESS</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.optionCard} onPress={onGemsPress}>
+        <Image source={require('../assets/icon_gems.png')} style={styles.optionIcon} />
+        <Text style={styles.optionText}>GEMS</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.optionCard} onPress={onRewardsPress}>
+        <Image source={require('../assets/icon_rewards.png')} style={styles.optionIcon} />
+        <Text style={styles.optionText}>REWARDS</Text>
+      </TouchableOpacity>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  mainCard: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 32,
-    borderWidth: 4,
-    borderColor: '#FFF176',
-    padding: 20,
-    marginBottom: 16,
-    shadowColor: '#1B5E20',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.12,
-    shadowRadius: 16,
-    elevation: 6,
-    flex: 1, // Allow it to take up available space
-  },
-  cardHeaderBanner: {
-    alignSelf: 'center',
-    paddingHorizontal: 36,
-    paddingVertical: 8,
-    borderRadius: 20,
-    marginTop: -34,
-    marginBottom: 12,
-    backgroundColor: '#FFD54F',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.15,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  cardHeaderTitle: { fontSize: 22, fontFamily: 'Chewy-Regular', color: '#37474F', letterSpacing: 1 },
-
-  roadmapSub: { textAlign: 'center', fontSize: 16, fontWeight: '700', color: '#78909C', marginBottom: 12 },
-
-  roadmapFlow: {
+  learnOptionsContainer: {
     flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginVertical: 12,
-    position: 'relative',
-  },
-  phaseBadgeContainer: { alignItems: 'center', zIndex: 2 },
-  illustrationImage: {
-    width: 72,
-    height: 72,
-    resizeMode: 'contain',
-  },
-  phaseText: { fontSize: 13, fontWeight: '800', color: '#455A64', marginTop: 6 },
-  pathDashedLine: {
-    width: 60,
-    height: 0,
-    borderWidth: 2,
-    borderColor: '#B0BEC5',
-    borderStyle: 'dashed',
-    marginHorizontal: -8,
-  },
-
-  learnOptions: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginTop: 20,
     flexWrap: 'wrap',
+    justifyContent: 'space-around',
+    gap: 10,
+    marginTop: 15, // Add some top margin as per original design
   },
-  learnOptionButton: {
+  optionCard: {
+    backgroundColor: '#E0FFFF', // Light cyan, as per previous static HTML
+    borderRadius: 10,
+    padding: 10,
     alignItems: 'center',
-    marginHorizontal: 5,
-    marginVertical: 10,
-    flexBasis: '28%', // roughly 3 items per row
+    width: '48%', // Roughly 2 items per row
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
   },
-  learnOptionIcon: {
+  roadmapIcon: {
     width: 60,
     height: 60,
     resizeMode: 'contain',
-    marginBottom: 5,
   },
-  learnOptionText: {
-    fontSize: 12,
+  optionIcon: {
+    width: 50,
+    height: 50,
+    resizeMode: 'contain',
+  },
+  optionText: {
+    fontSize: 14,
     fontWeight: 'bold',
-    color: '#4CAF50',
+    color: '#4682B4', // Steel blue
+    marginTop: 5,
     textAlign: 'center',
   },
 });
