@@ -3,6 +3,14 @@ import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import PhonicsChallengeStyles from '../styles/PhonicsChallengeStyles';
 import phonicsChallenges from '../data/phonicsChallenges';
 
+// Static image map to replace dynamic require()
+const IMAGES = {
+  'cat_image.png': require('./assets/images/cat_image.png'),
+  'dog_image.png': require('./assets/images/dog_image.png'),
+  'sun_image.png': require('./assets/images/sun_image.png'),
+  'hat_image.png': require('./assets/images/hat_image.png'),
+};
+
 const PhonicsChallenge = () => {
     const [score, setScore] = useState(0);
     const [challengeStarted, setChallengeStarted] = useState(false);
@@ -55,10 +63,9 @@ const PhonicsChallenge = () => {
             <View style={PhonicsChallengeStyles.challengeCard}>
                 {challengeStarted && currentChallenge ? (
                     <>
-                        {/* Placeholder for image - you'd typically use an actual Image component and require the image source */}
-                        <Image 
-                            source={require(`../assets/images/${currentChallenge.image}`)}
-                            style={{ width: 100, height: 100, marginBottom: 10 }} // Placeholder size
+                        <Image
+                            source={IMAGES[currentChallenge.image]}
+                            style={{ width: 100, height: 100, marginBottom: 10 }}
                         />
                         <Text style={PhonicsChallengeStyles.challengeText}>{currentChallenge.word}</Text>
 
@@ -90,10 +97,5 @@ const PhonicsChallenge = () => {
         </View>
     );
 };
-
-const styles = PhonicsChallengeStyles;
-
-export default PhonicsChallenge;
-const styles = PhonicsChallengeStyles;
 
 export default PhonicsChallenge;
