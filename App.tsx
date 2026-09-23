@@ -22,42 +22,15 @@ import NavigationBar, { TabType } from './NavigationBar';
 import AvatarCustomizer from './components/AvatarCustomizer';
 import LearnSection from './components/LearnSection';
 import TestSection from './components/TestSection';
-// RewardsBar is now integrated into LearnSection, so no direct import here
+
+// Import phonics data
+import phonicsData from './src/phonicsData.json';
 
 SplashScreen.preventAutoHideAsync();
 
-const SOUND_ASSETS: { [key: string]: any } = {
-  chin: require('./assets/sounds/chin.mp3'),
-  quog: require('./assets/sounds/quog.mp3'),
-  shark: require('./assets/sounds/shark.mp3'),
-  phope: require('./assets/sounds/phope.mp3'),
-  gloom: require('./assets/sounds/gloom.mp3'),
-  grateful: require('./assets/sounds/grateful.mp3'),
-  dolphin: require('./assets/sounds/dolphin.mp3'),
-  pumpkin: require('./assets/sounds/pumpkin.mp3'),
-};
-
-interface PhonemeSegment {
-  text: string;
-  type: 'dot' | 'line';
-}
-
-interface PhonicsWord {
-  id: number;
-  word: string;
-  isAlien: boolean;
-  phonicsType: string;
-  phase: number;
-  segments: PhonemeSegment[];
-}
-
-const PHONICS_CURRICULUM: PhonicsWord[] = [
-  { id: 1, word: 'chin', isAlien: false, phonicsType: 'Digraph ch', phase: 3, segments: [{ text: 'ch', type: 'line' }, { text: 'i', type: 'dot' }, { text: 'n', type: 'dot' }] },
-  { id: 2, word: 'cat', isAlien: false, phonicsType: 'CVC Word', phase: 2, segments: [{ text: 'c', type: 'dot' }, { text: 'a', type: 'dot' }, { text: 't', type: 'dot' }] },
-  { id: 3, word: 'shark', isAlien: false, phonicsType: 'Digraph sh / ar', phase: 3, segments: [{ text: 'sh', type: 'line' }, { text: 'ar', type: 'line' }, { text: 'k', type: 'dot' }] },
-  { id: 4, word: 'gloom', isAlien: false, phonicsType: 'Vowel Team oo', phase: 4, segments: [{ text: 'gl', type: 'line' }, { text: 'oo', type: 'line' }, { text: 'm', type: 'dot' }] },
-  { id: 5, word: 'phope', isAlien: true, phonicsType: 'Alien Word', phase: 5, segments: [{ text: 'ph', type: 'line' }, { text: 'o', type: 'dot' }, { text: 'pe', type: 'line' }] },
-];
+// Using imported phonicsData.phonicsCurriculum and phonicsData.audioMap
+const PHONICS_CURRICULUM = phonicsData.phonicsCurriculum;
+const AUDIO_MAP = phonicsData.audioMap;
 
 export default function App() {
   const [fontsLoaded] = useFonts({ 'Chewy-Regular': Chewy_400Regular });
@@ -89,13 +62,16 @@ export default function App() {
   async function playSound(soundKey: string) {
     try {
       if (soundObject) await soundObject.unloadAsync();
-      const audioRequire = SOUND_ASSETS[soundKey.toLowerCase()];
-      if (!audioRequire) return;
-      const { sound } = await Audio.Sound.createAsync(audioRequire);
+      const audioPath = AUDIO_MAP[soundKey.toLowerCase()];
+      if (!audioPath) {
+        console.warn(`Sound for key "${soundKey}" not found.`);
+        return;
+      }
+      const { sound } = await Audio.Sound.createAsync(require(audioPath));
       setSoundObject(sound);
       await sound.playAsync();
     } catch (e) {
-      console.error(e);
+      console.error('Error playing sound:', e);
     }
   }
 
@@ -184,6 +160,9 @@ export default function App() {
             <View style={styles.testSection}>
               <Text style={styles.sectionTitle}>TEST</Text>
               <Text style={styles.testWord}>{currentWord.word}</Text>
+              {currentWord.isAlien && currentWord.alienImagePath && (
+                <Image source={require(currentWord.alienImagePath)} style={styles.alienImage} />
+              )}
               <Text style={styles.scoreText}>{score}/{PHONICS_CURRICULUM.length}</Text>
               <Animated.Image source={require('./assets/zorgo_mascot.png')} style={[styles.mascot, { transform: [{ translateY: mascotAnim }] }]} />
               <TouchableOpacity style={styles.startTestButton} onPress={handleStartTest}>
@@ -319,6 +298,15 @@ const styles = StyleSheet.create({
     fontFamily: 'Chewy-Regular',
     color: '#FF4500',
     marginVertical: 10,
+  },
+  alienImage: {
+    width: 80,
+    height: 80,
+    resizeMode: 'contain',
+    position: 'absolute',
+    top: 50,
+    right: 50,
+    zIndex: 1,
   },
   scoreText: {
     fontSize: 18,

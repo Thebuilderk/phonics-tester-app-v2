@@ -1,17 +1,26 @@
 const fs = require('fs');
 const path = require('path');
 
+// Helper to generate placeholder segments for words
+function generateSegments(word) {
+  // Simple placeholder: every character is a dot segment
+  return word.split('').map(char => ({ text: char, type: 'dot' }));
+}
+
 const soundsFolder = path.join(__dirname, 'assets', 'sounds');
+const alienImagesFolder = path.join(__dirname, 'assets', 'aliens');
 const docsFolder = path.join(__dirname, 'Phonics_docs');
 const outputDir = path.join(__dirname, 'src');
 const outputPath = path.join(outputDir, 'phonicsData.json');
 
 function generateData() {
   const audioFiles = fs.existsSync(soundsFolder) ? fs.readdirSync(soundsFolder) : [];
+  const alienImageFiles = fs.existsSync(alienImagesFolder) ? fs.readdirSync(alienImagesFolder) : [];
   const docFiles = fs.existsSync(docsFolder) ? fs.readdirSync(docsFolder) : [];
 
   const parsedData = {
     audioMap: {},
+    phonicsCurriculum: [],
     documents: [],
   };
 
@@ -38,6 +47,36 @@ function generateData() {
       });
     }
   });
+
+  // 3. Generate Phonics Curriculum from words.json
+  const wordsFilePath = path.join(docsFolder, 'words.json');
+  if (fs.existsSync(wordsFilePath)) {
+    const allWords = JSON.parse(fs.readFileSync(wordsFilePath, 'utf8'));
+
+    // Temporary definition of 'real words' based on App.tsx sample
+    const realWords = new Set(['chin', 'cat', 'shark', 'gloom']);
+
+    const alienImagePaths = alienImageFiles.map(file => `./assets/aliens/${file}`);
+
+    allWords.forEach((word, index) => {
+      const isAlienWord = !realWords.has(word);
+      const alienImagePath = isAlienWord && alienImagePaths.length > 0
+        ? alienImagePaths[Math.floor(Math.random() * alienImagePaths.length)]
+        : undefined;
+
+      parsedData.phonicsCurriculum.push({
+        id: index + 1,
+        word: word,
+        isAlien: isAlienWord,
+        phonicsType: isAlienWord ? 'Alien Word' : 'Placeholder Type',
+        phase: isAlienWord ? 5 : 3, // Placeholder phase
+        segments: generateSegments(word),
+        alienImagePath: alienImagePath, // Add alien image path
+      });
+    });
+  } else {
+    console.warn('words.json not found. Phonics curriculum will be empty.');
+  }
 
   // Ensure 'src' directory exists
   if (!fs.existsSync(outputDir)) {

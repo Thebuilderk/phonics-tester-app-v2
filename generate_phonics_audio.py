@@ -3,6 +3,7 @@ import glob
 import time
 import requests
 import pandas as pd
+import json
 
 # Configuration
 API_KEY = "sk_b9bcd3381449abfeebd71e366148fec34601fd1675dc9e6b"
@@ -68,3 +69,9 @@ for word in sorted(unique_words):
         time.sleep(0.5)
 
 print(f"Done! {generated_count} new audio files generated in '{OUTPUT_DIR}'.")
+
+# Save unique words to a JSON file
+words_output_path = os.path.join(DOCS_DIR, "words.json")
+with open(words_output_path, "w") as f:
+    json.dump(sorted(list(unique_words)), f, indent=2)
+print(f"Saved unique words to {words_output_path}")
