@@ -8,12 +8,19 @@ interface NavigationBarProps {
   setActiveTab: (tab: TabType) => void;
 }
 
+const NAVIGATION_ICONS: Record<string, any> = {
+  home: require('./assets/sun_logo.png'), // Using sun_logo.png as a placeholder for home
+  games: require('./assets/nav_games.png'),
+  stories: require('./assets/nav_stories.png'),
+  stuff: require('./assets/nav_stuff.png'),
+};
+
 export default function NavigationBar({ activeTab, setActiveTab }: NavigationBarProps) {
   const tabs: { key: TabType; icon: any; label: string }[] = [
-    { key: 'Home', icon: require('./assets/nav_home.png'), label: 'HOME' },
-    { key: 'Games', icon: require('./assets/nav_games.png'), label: 'GAMES' },
-    { key: 'Stories', icon: require('./assets/nav_stories.png'), label: 'STORIES' },
-    { key: 'My Stuff', icon: require('./assets/nav_stuff.png'), label: 'MY STUFF' },
+    { key: 'Home', icon: NAVIGATION_ICONS.home, label: 'HOME' },
+    { key: 'Games', icon: NAVIGATION_ICONS.games, label: 'GAMES' },
+    { key: 'Stories', icon: NAVIGATION_ICONS.stories, label: 'STORIES' },
+    { key: 'My Stuff', icon: NAVIGATION_ICONS.stuff, label: 'MY STUFF' },
   ];
 
   return (

@@ -28,6 +28,12 @@ import phonicsData from './src/phonicsData.json';
 
 SplashScreen.preventAutoHideAsync();
 
+const ALIEN_IMAGES: Record<string, any> = {
+  alien1: require('./assets/aliens/alien1.jpg'),
+  alien_image1: require('./assets/aliens/alien_image1.png'),
+  alien_image2: require('./assets/aliens/alien_image2.png'),
+};
+
 // Using imported phonicsData.phonicsCurriculum and phonicsData.audioMap
 const PHONICS_CURRICULUM = phonicsData.phonicsCurriculum;
 const AUDIO_MAP = phonicsData.audioMap;
@@ -160,8 +166,8 @@ export default function App() {
             <View style={styles.testSection}>
               <Text style={styles.sectionTitle}>TEST</Text>
               <Text style={styles.testWord}>{currentWord.word}</Text>
-              {currentWord.isAlien && currentWord.alienImagePath && (
-                <Image source={require(currentWord.alienImagePath)} style={styles.alienImage} />
+              {currentWord.isAlien && currentWord.alienImagePath && ALIEN_IMAGES[currentWord.alienImagePath] && (
+                <Image source={ALIEN_IMAGES[currentWord.alienImagePath]} style={styles.alienImage} />
               )}
               <Text style={styles.scoreText}>{score}/{PHONICS_CURRICULUM.length}</Text>
               <Animated.Image source={require('./assets/zorgo_mascot.png')} style={[styles.mascot, { transform: [{ translateY: mascotAnim }] }]} />

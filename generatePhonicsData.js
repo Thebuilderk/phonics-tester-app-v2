@@ -56,12 +56,12 @@ function generateData() {
     // Temporary definition of 'real words' based on App.tsx sample
     const realWords = new Set(['chin', 'cat', 'shark', 'gloom']);
 
-    const alienImagePaths = alienImageFiles.map(file => `./assets/aliens/${file}`);
+    const alienImageKeys = alienImageFiles.map(file => path.basename(file, path.extname(file)));
 
     allWords.forEach((word, index) => {
       const isAlienWord = !realWords.has(word);
-      const alienImagePath = isAlienWord && alienImagePaths.length > 0
-        ? alienImagePaths[Math.floor(Math.random() * alienImagePaths.length)]
+      const alienImageKey = isAlienWord && alienImageKeys.length > 0
+        ? alienImageKeys[Math.floor(Math.random() * alienImageKeys.length)]
         : undefined;
 
       parsedData.phonicsCurriculum.push({
@@ -71,7 +71,7 @@ function generateData() {
         phonicsType: isAlienWord ? 'Alien Word' : 'Placeholder Type',
         phase: isAlienWord ? 5 : 3, // Placeholder phase
         segments: generateSegments(word),
-        alienImagePath: alienImagePath, // Add alien image path
+        alienImagePath: alienImageKey, // Store only the key
       });
     });
   } else {
