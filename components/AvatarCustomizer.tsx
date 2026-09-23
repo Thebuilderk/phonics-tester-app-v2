@@ -16,7 +16,7 @@ const AvatarCustomizer: React.FC<AvatarCustomizerProps> = ({ onCustomizePress, o
         <Image source={require('../assets/avatar_owl.png')} style={styles.avatarImage} />
       </TouchableOpacity>
       <TouchableOpacity onPress={() => onAvatarSelect('robot')} style={styles.avatarButton}>
-        <Image source={require('../assets/robot.png')} style={styles.avatarImage} />
+        <Image source={require('../assets/avatar_robot.png')} style={styles.avatarImage} />
       </TouchableOpacity>
       <TouchableOpacity onPress={onCustomizePress} style={styles.customizeButton}>
         <Text style={styles.customizeButtonText}>CUSTOMIZE</Text>
