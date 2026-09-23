@@ -12,18 +12,18 @@ const AvatarCustomizer = () => {
     };
 
     const getAvatarImageSource = () => {
-        const imagePath = `../assets/images/avatar_${skinTone.toLowerCase()}_${hairStyle.toLowerCase()}.png`;
+        const imagePath = `../../assets/images/avatar_${skinTone.toLowerCase()}_${hairStyle.toLowerCase()}.png`;
         switch (imagePath) {
-            case '../assets/images/avatar_light_short.png':
-                return require('../assets/images/avatar_light_short.png');
-            case '../assets/images/avatar_light_long.png':
-                return require('../assets/images/avatar_light_long.png');
-            case '../assets/images/avatar_dark_short.png':
-                return require('../assets/images/avatar_dark_short.png');
-            case '../assets/images/avatar_dark_long.png':
-                return require('../assets/images/avatar_dark_long.png');
+            case '../../assets/images/avatar_light_short.png':
+                return require('../../assets/images/avatar_light_short.png');
+            case '../../assets/images/avatar_light_long.png':
+                return require('../../assets/images/avatar_light_long.png');
+            case '../../assets/images/avatar_dark_short.png':
+                return require('../../assets/images/avatar_dark_short.png');
+            case '../../assets/images/avatar_dark_long.png':
+                return require('../../assets/images/avatar_dark_long.png');
             default:
-                return require('../assets/images/avatar_light_short.png'); // Default image
+                return require('../../assets/images/avatar_light_short.png'); // Default image
         }
     };
 

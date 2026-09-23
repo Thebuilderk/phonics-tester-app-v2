@@ -5,10 +5,10 @@ import phonicsChallenges from '../data/phonicsChallenges';
 
 // Static image map to replace dynamic require()
 const IMAGES = {
-  'cat_image.png': require('./assets/images/cat_image.png'),
-  'dog_image.png': require('./assets/images/dog_image.png'),
-  'sun_image.png': require('./assets/images/sun_image.png'),
-  'hat_image.png': require('./assets/images/hat_image.png'),
+  'cat_image.png': require('../../assets/images/cat_image.png'),
+  'dog_image.png': require('../../assets/images/dog_image.png'),
+  'sun_image.png': require('../../assets/images/sun_image.png'),
+  'hat_image.png': require('../../assets/images/hat_image.png'),
 };
 
 const PhonicsChallenge = () => {
