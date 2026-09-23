@@ -2,29 +2,28 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import AvatarCustomizerStyles from '../styles/AvatarCustomizerStyles';
 
-const AvatarCustomizer = () => {
-    const [skinTone, setSkinTone] = useState('Light');
-    const [hairStyle, setHairStyle] = useState('Short');
+const AVATAR_IMAGES = {
+    'avatar_fox.png': require('../../assets/avatar_fox.png'),
+    'avatar_owl.png': require('../../assets/avatar_owl.png'),
+    'avatar_robot.png': require('../../assets/avatar_robot.png'),
+};
 
-    const handleSaveAvatar = () => {
-        console.log('Avatar Saved:', { skinTone, hairStyle });
-        alert(`Avatar Saved: Skin Tone - ${skinTone}, Hair Style - ${hairStyle}`);
+const avatarKeys = Object.keys(AVATAR_IMAGES);
+
+const AvatarCustomizer = ({ onCustomizePress, onAvatarSelect }) => {
+    const [currentAvatarIndex, setCurrentAvatarIndex] = useState(0);
+    const selectedAvatarKey = avatarKeys[currentAvatarIndex];
+
+    const handleNextAvatar = () => {
+        const nextIndex = (currentAvatarIndex + 1) % avatarKeys.length;
+        setCurrentAvatarIndex(nextIndex);
+        if (onAvatarSelect) onAvatarSelect(avatarKeys[nextIndex]);
     };
 
-    const getAvatarImageSource = () => {
-        const imagePath = `../../assets/images/avatar_${skinTone.toLowerCase()}_${hairStyle.toLowerCase()}.png`;
-        switch (imagePath) {
-            case '../../assets/images/avatar_light_short.png':
-                return require('../../assets/images/avatar_light_short.png');
-            case '../../assets/images/avatar_light_long.png':
-                return require('../../assets/images/avatar_light_long.png');
-            case '../../assets/images/avatar_dark_short.png':
-                return require('../../assets/images/avatar_dark_short.png');
-            case '../../assets/images/avatar_dark_long.png':
-                return require('../../assets/images/avatar_dark_long.png');
-            default:
-                return require('../../assets/images/avatar_light_short.png'); // Default image
-        }
+    const handlePreviousAvatar = () => {
+        const prevIndex = (currentAvatarIndex - 1 + avatarKeys.length) % avatarKeys.length;
+        setCurrentAvatarIndex(prevIndex);
+        if (onAvatarSelect) onAvatarSelect(avatarKeys[prevIndex]);
     };
 
     return (
@@ -32,47 +31,27 @@ const AvatarCustomizer = () => {
             <Text style={AvatarCustomizerStyles.title}>AVATAR CUSTOMIZER</Text>
             <View style={AvatarCustomizerStyles.avatarPreview}>
                 <Image 
-                    source={getAvatarImageSource()}
-                    style={AvatarCustomizerStyles.avatarPreview} // Reuse avatarPreview style for image dimensions
+                    source={AVATAR_IMAGES[selectedAvatarKey]}
+                    style={AvatarCustomizerStyles.avatarImage}
                 />
-            </View>
-
-            <View style={AvatarCustomizerStyles.optionContainer}>
-                <Text style={AvatarCustomizerStyles.optionLabel}>Skin Tone: {skinTone}</Text>
-                <TouchableOpacity
-                    style={AvatarCustomizerStyles.customizationButton}
-                    onPress={() => setSkinTone(skinTone === 'Light' ? 'Dark' : 'Light')}
-                >
-                    <Text style={AvatarCustomizerStyles.customizationButtonText}>Change</Text>
+                <TouchableOpacity style={AvatarCustomizerStyles.arrowButtonLeft} onPress={handlePreviousAvatar}>
+                    <Text style={AvatarCustomizerStyles.arrowButtonText}>&lt;</Text>
                 </TouchableOpacity>
-            </View>
-
-            <View style={AvatarCustomizerStyles.optionContainer}>
-                <Text style={AvatarCustomizerStyles.optionLabel}>Hair Style: {hairStyle}</Text>
-                <TouchableOpacity
-                    style={AvatarCustomizerStyles.customizationButton}
-                    onPress={() => setHairStyle(hairStyle === 'Short' ? 'Long' : 'Short')}
-                >
-                    <Text style={AvatarCustomizerStyles.customizationButtonText}>Change</Text>
+                <TouchableOpacity style={AvatarCustomizerStyles.arrowButtonRight} onPress={handleNextAvatar}>
+                    <Text style={AvatarCustomizerStyles.arrowButtonText}>&gt;</Text>
                 </TouchableOpacity>
-            </View>
-
-            <View style={AvatarCustomizerStyles.optionContainer}>
-                <Text style={AvatarCustomizerStyles.optionLabel}>Eyes</Text>
-                {/* Placeholder for a slider control */}
-                <View style={AvatarCustomizerStyles.slider}><Text>Slider Placeholder</Text></View>
             </View>
 
             <TouchableOpacity
                 style={AvatarCustomizerStyles.customizationButton}
-                onPress={handleSaveAvatar}
+                onPress={onCustomizePress || (() => console.log("Customize button pressed"))}
             >
-                <Text style={AvatarCustomizerStyles.customizationButtonText}>SAVE AVATAR</Text>
+                <Text style={AvatarCustomizerStyles.customizationButtonText}>CUSTOMIZE</Text>
             </TouchableOpacity>
         </View>
     );
 };
 
-const styles = AvatarCustomizerStyles;
+const styles = AvatarCustomizerStyles; // Assuming this is imported for actual styles.
 
 export default AvatarCustomizer;
