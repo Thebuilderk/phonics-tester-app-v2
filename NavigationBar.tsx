@@ -10,10 +10,10 @@ interface NavigationBarProps {
 
 export default function NavigationBar({ activeTab, setActiveTab }: NavigationBarProps) {
   const tabs: { key: TabType; icon: any; label: string }[] = [
-    { key: 'Home', icon: require('./assets/assets/nav_home.png'), label: 'HOME' },
-    { key: 'Games', icon: require('./assets/assets/nav_games.png'), label: 'GAMES' },
-    { key: 'Stories', icon: require('./assets/assets/nav_stories.png'), label: 'STORIES' },
-    { key: 'My Stuff', icon: require('./assets/assets/nav_stuff.png'), label: 'MY STUFF' },
+    { key: 'Home', icon: require('./assets/nav_home.png'), label: 'HOME' },
+    { key: 'Games', icon: require('./assets/nav_games.png'), label: 'GAMES' },
+    { key: 'Stories', icon: require('./assets/nav_stories.png'), label: 'STORIES' },
+    { key: 'My Stuff', icon: require('./assets/nav_stuff.png'), label: 'MY STUFF' },
   ];
 
   return (

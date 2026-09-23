@@ -10,13 +10,13 @@ const AvatarCustomizer: React.FC<AvatarCustomizerProps> = ({ onCustomizePress, o
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={() => onAvatarSelect('fox')} style={styles.avatarButton}>
-        <Image source={require('../assets/assets/avatar_fox.png')} style={styles.avatarImage} />
+        <Image source={require('../assets/avatar_fox.png')} style={styles.avatarImage} />
       </TouchableOpacity>
       <TouchableOpacity onPress={() => onAvatarSelect('owl')} style={styles.avatarButton}>
-        <Image source={require('../assets/assets/avatar_owl.png')} style={styles.avatarImage} />
+        <Image source={require('../assets/avatar_owl.png')} style={styles.avatarImage} />
       </TouchableOpacity>
       <TouchableOpacity onPress={() => onAvatarSelect('robot')} style={styles.avatarButton}>
-        <Image source={require('../assets/assets/avatar_robot.png')} style={styles.avatarImage} />
+        <Image source={require('../assets/robot.png')} style={styles.avatarImage} />
       </TouchableOpacity>
       <TouchableOpacity onPress={onCustomizePress} style={styles.customizeButton}>
         <Text style={styles.customizeButtonText}>CUSTOMIZE</Text>
