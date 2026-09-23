@@ -22,7 +22,7 @@ import NavigationBar, { TabType } from './NavigationBar';
 import AvatarCustomizer from './components/AvatarCustomizer';
 import LearnSection from './components/LearnSection';
 import TestSection from './components/TestSection';
-import RewardsBar from './components/RewardsBar';
+// RewardsBar is now integrated into LearnSection, so no direct import here
 
 SplashScreen.preventAutoHideAsync();
 
