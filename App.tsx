@@ -10,10 +10,13 @@ import {
 import * as SplashScreen from 'expo-splash-screen';
 import { useFonts, Chewy_400Regular } from '@expo-google-fonts/chewy';
 import { registerRootComponent } from 'expo';
+import { RegisterClientLocalizations, translations } from './src/utils/i18n';
 
 import HomeScreen from './src/screens/HomeScreen'; // Import the HomeScreen
 
 SplashScreen.preventAutoHideAsync();
+
+RegisterClientLocalizations({ translations });
 
 // Error Boundary Component
 class ErrorBoundary extends React.Component<any, { hasError: boolean; error: Error | null }> {
