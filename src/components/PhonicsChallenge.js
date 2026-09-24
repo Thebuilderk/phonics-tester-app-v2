@@ -2,15 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import PhonicsChallengeStyles from '../styles/PhonicsChallengeStyles';
 import phonicsChallenges from '../data/phonicsChallenges';
-import colors from '../styles/colors'; // Added import for colors
-
-// Static image map to replace dynamic require()
-const IMAGES = {
-  'cat_image.png': require('../../assets/images/cat_image.png'),
-  'dog_image.png': require('../../assets/images/dog_image.png'),
-  'sun_image.png': require('../../assets/images/sun_image.png'),
-  'hat_image.png': require('../../assets/images/hat_image.png'),
-};
+import colors from '../styles/colors';
+import { LOCAL_IMAGES } from '../utils/images';
 
 const PhonicsChallenge = () => {
     const [score, setScore] = useState(0);
@@ -45,7 +38,6 @@ const PhonicsChallenge = () => {
             alert('Incorrect! Try again.');
         }
 
-        // Move to the next challenge after a short delay for feedback
         setTimeout(() => {
             const nextIndex = currentChallengeIndex + 1;
             if (nextIndex < phonicsChallenges.length) {
@@ -55,26 +47,41 @@ const PhonicsChallenge = () => {
                 alert(`Challenge Complete! Your final score is ${score + (selectedAnswer === currentChallenge.correctAnswer ? 10 : 0)}`);
                 setChallengeStarted(false);
             }
-        }, 1000); // 1 second delay
+        }, 1000);
+    };
+
+    // Helper function to map challenge images safely
+    const getChallengeImageSource = (imageKey) => {
+        if (imageKey && imageKey.includes('cat')) return LOCAL_IMAGES.cat;
+        if (imageKey && imageKey.includes('dog')) return LOCAL_IMAGES.dog;
+        return LOCAL_IMAGES.cat; // Fallback image
     };
 
     return (
         <View style={PhonicsChallengeStyles.container}>
             <Text style={PhonicsChallengeStyles.title}>PHONICS CHALLENGE</Text>
             <View style={[PhonicsChallengeStyles.cardContainer, PhonicsChallengeStyles.challengeCard]}>
-                <View style={[PhonicsChallengeStyles.badgeBanner, { right: 0, backgroundColor: colors.softOrange }]}><Text style={PhonicsChallengeStyles.badgeBannerText}>CHALLENGE</Text></View>
+                <View style={[PhonicsChallengeStyles.badgeBanner, { right: 0, backgroundColor: colors.softOrange }]}>
+                    <Text style={PhonicsChallengeStyles.badgeBannerText}>CHALLENGE</Text>
+                </View>
                 {challengeStarted && currentChallenge ? (
                     <>
                         <Image
-                            source={IMAGES[currentChallenge.image]}
+                            source={getChallengeImageSource(currentChallenge.image)}
                             style={{ width: 100, height: 100, marginBottom: 10 }}
                         />
                         <Text style={PhonicsChallengeStyles.challengeText}>{currentChallenge.word}</Text>
 
                         <View style={PhonicsChallengeStyles.scoreContainer}>
-                            <Text style={PhonicsChallengeStyles.scoreText}>SCORE: {score}/{(phonicsChallenges.length * 10)}</Text>
-                            {feedback === 'correct' && <Text style={[PhonicsChallengeStyles.feedbackIcon, PhonicsChallengeStyles.correctFeedback]}>✅</Text>}
-                            {feedback === 'incorrect' && <Text style={[PhonicsChallengeStyles.feedbackIcon, PhonicsChallengeStyles.incorrectFeedback]}>❌</Text>}
+                            <Text style={PhonicsChallengeStyles.scoreText}>
+                                SCORE: {score}/{(phonicsChallenges.length * 10)}
+                            </Text>
+                            {feedback === 'correct' && (
+                                <Text style={[PhonicsChallengeStyles.feedbackIcon, PhonicsChallengeStyles.correctFeedback]}>✅</Text>
+                            )}
+                            {feedback === 'incorrect' && (
+                                <Text style={[PhonicsChallengeStyles.feedbackIcon, PhonicsChallengeStyles.incorrectFeedback]}>❌</Text>
+                            )}
                         </View>
 
                         <View style={PhonicsChallengeStyles.buttonContainer}>
@@ -88,7 +95,6 @@ const PhonicsChallenge = () => {
                                 </TouchableOpacity>
                             ))}
                         </View>
-                        {/* Placeholder for character, potentially styled with custom text */}
                         <Text style={PhonicsChallengeStyles.challengeText}>Blue alien character</Text>
                     </>
                 ) : (
@@ -100,6 +106,5 @@ const PhonicsChallenge = () => {
         </View>
     );
 };
-
 
 export default PhonicsChallenge;

@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, Image } from 'react-native';
+import { LOCAL_IMAGES } from '../utils/images';
 
 interface AvatarCustomizerProps {
   onCustomizePress: () => void;
@@ -10,13 +11,13 @@ const AvatarCustomizer: React.FC<AvatarCustomizerProps> = ({ onCustomizePress, o
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={() => onAvatarSelect('fox')} style={styles.avatarButton}>
-        <Image source={require('../../assets/avatar_fox.png')} style={styles.avatarImage} />
+        <Image source={LOCAL_IMAGES.fox} style={styles.avatarImage} />
       </TouchableOpacity>
       <TouchableOpacity onPress={() => onAvatarSelect('owl')} style={styles.avatarButton}>
-        <Image source={require('../../assets/avatar_owl.png')} style={styles.avatarImage} />
+        <Image source={LOCAL_IMAGES.owl} style={styles.avatarImage} />
       </TouchableOpacity>
       <TouchableOpacity onPress={() => onAvatarSelect('robot')} style={styles.avatarButton}>
-        <Image source={require('../../assets/avatar_robot.png')} style={styles.avatarImage} />
+        <Image source={LOCAL_IMAGES.robot} style={styles.avatarImage} />
       </TouchableOpacity>
       <TouchableOpacity onPress={onCustomizePress} style={styles.customizeButton}>
         <Text style={styles.customizeButtonText}>CUSTOMIZE</Text>
@@ -29,7 +30,6 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    // Removed explicit background, padding, and shadow to blend with parent header
   },
   avatarButton: {
     width: 40,
