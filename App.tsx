@@ -9,7 +9,7 @@ import StoriesScreen from './src/screens/StoriesScreen';
 import ProgressScreen from './src/screens/ProgressScreen';
 import RewardsScreen from './src/screens/RewardsScreen';
 import TestScreen from './src/screens/TestScreen';
-import BottomNavigationBar from './components/BottomNavigationBar';
+import BottomNavigationBar from './src/components/BottomNavigationBar';
 
 export type ScreenName = 
   | 'HOME' 
