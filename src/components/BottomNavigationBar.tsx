@@ -1,5 +1,3 @@
-// src/components/BottomNavigationBar.tsx
-
 import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, Image } from 'react-native';
 
@@ -10,12 +8,11 @@ interface NavigationBarProps {
   setActiveTab: (tab: TabType) => void;
 }
 
-// Updated asset paths relative to src/components/
 const NAVIGATION_ICONS: Record<string, any> = {
-  home: require('../assets/sun_logo.png'),
-  games: require('../assets/nav_games.png'),
-  stories: require('../assets/nav_stories.png'),
-  stuff: require('../assets/nav_stuff.png'),
+  home: require('../../assets/sun_logo.png'),
+  games: require('../../assets/nav_games.png'),
+  stories: require('../../assets/nav_stories.png'),
+  stuff: require('../../assets/nav_stuff.png'),
 };
 
 export default function BottomNavigationBar({ activeTab, setActiveTab }: NavigationBarProps) {

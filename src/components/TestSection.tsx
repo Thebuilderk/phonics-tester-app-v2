@@ -5,7 +5,6 @@ import {
   View,
   TouchableOpacity,
   Animated,
-  Image,
 } from 'react-native';
 
 interface PhonicsWord {
@@ -14,12 +13,13 @@ interface PhonicsWord {
   isAlien: boolean;
   phonicsType: string;
   phase: number;
-  segments: any[]; // Simplified for home screen display
+  segments: any[];
 }
 
 interface TestSectionProps {
   currentWord: PhonicsWord;
   score: number;
+  totalQuestions?: number;
   onStartTest: () => void;
   mascotAnim: Animated.Value;
 }
@@ -27,6 +27,7 @@ interface TestSectionProps {
 const TestSection: React.FC<TestSectionProps> = ({
   currentWord,
   score,
+  totalQuestions = 10,
   onStartTest,
   mascotAnim,
 }) => {
@@ -34,8 +35,11 @@ const TestSection: React.FC<TestSectionProps> = ({
     <View style={styles.testSectionContainer}>
       <Text style={styles.sectionTitle}>TEST</Text>
       <Text style={styles.testWord}>{currentWord.word}</Text>
-      <Text style={styles.scoreText}>{score}/{PHONICS_CURRICULUM.length}</Text> {/* Assuming PHONICS_CURRICULUM is accessible or passed */}
-      <Animated.Image source={require\('../../assets/zorgo_mascot.png')} style={[styles.mascot, { transform: [{ translateY: mascotAnim }] }]} />
+      <Text style={styles.scoreText}>{score}/{totalQuestions}</Text>
+      <Animated.Image 
+        source={require('../../assets/zorgo_mascot.png')} 
+        style={[styles.mascot, { transform: [{ translateY: mascotAnim }] }]} 
+      />
       <TouchableOpacity style={styles.startTestButton} onPress={onStartTest}>
         <Text style={styles.startTestButtonText}>START TEST</Text>
       </TouchableOpacity>

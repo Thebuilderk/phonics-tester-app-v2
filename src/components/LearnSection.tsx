@@ -11,20 +11,20 @@ const LearnSection: React.FC<LearnSectionProps> = ({ onProgressPress, onGemsPres
   return (
     <View style={styles.learnOptionsContainer}> 
       <TouchableOpacity style={styles.optionCard} onPress={() => console.log("Roadmap Pressed")}>
-        <Image source={require\('../../assets/treehouse_phase2.png')} style={styles.roadmapIcon} />
-        <Image source={require\('../../assets/rocket_phase5.png')} style={styles.roadmapIcon} />
+        <Image source={require('../../assets/treehouse_phase2.png')} style={styles.roadmapIcon} />
+        <Image source={require('../../assets/rocket_phase5.png')} style={styles.roadmapIcon} />
         <Text style={styles.optionText}>Roadmap</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.optionCard} onPress={onProgressPress}>
-        <Image source={require\('../../assets/icon_progress.png')} style={styles.optionIcon} />
+        <Image source={require('../../assets/icon_progress.png')} style={styles.optionIcon} />
         <Text style={styles.optionText}>PROGRESS</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.optionCard} onPress={onGemsPress}>
-        <Image source={require\('../../assets/icon_gems.png')} style={styles.optionIcon} />
+        <Image source={require('../../assets/icon_gems.png')} style={styles.optionIcon} />
         <Text style={styles.optionText}>GEMS</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.optionCard} onPress={onRewardsPress}>
-        <Image source={require\('../../assets/icon_rewards.png')} style={styles.optionIcon} />
+        <Image source={require('../../assets/icon_rewards.png')} style={styles.optionIcon} />
         <Text style={styles.optionText}>REWARDS</Text>
       </TouchableOpacity>
     </View>
@@ -37,14 +37,14 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     justifyContent: 'space-around',
     gap: 10,
-    marginTop: 15, // Add some top margin as per original design
+    marginTop: 15,
   },
   optionCard: {
-    backgroundColor: '#E0FFFF', // Light cyan, as per previous static HTML
+    backgroundColor: '#E0FFFF',
     borderRadius: 10,
     padding: 10,
     alignItems: 'center',
-    width: '48%', // Roughly 2 items per row
+    width: '48%',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
   optionText: {
     fontSize: 14,
     fontWeight: 'bold',
-    color: '#4682B4', // Steel blue
+    color: '#4682B4',
     marginTop: 5,
     textAlign: 'center',
   },
