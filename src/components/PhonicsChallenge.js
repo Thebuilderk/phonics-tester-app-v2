@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import PhonicsChallengeStyles from '../styles/PhonicsChallengeStyles';
 import phonicsChallenges from '../data/phonicsChallenges';
+import colors from '../styles/colors'; // Added import for colors
 
 // Static image map to replace dynamic require()
 const IMAGES = {
@@ -60,7 +61,8 @@ const PhonicsChallenge = () => {
     return (
         <View style={PhonicsChallengeStyles.container}>
             <Text style={PhonicsChallengeStyles.title}>PHONICS CHALLENGE</Text>
-            <View style={PhonicsChallengeStyles.challengeCard}>
+            <View style={[PhonicsChallengeStyles.cardContainer, PhonicsChallengeStyles.challengeCard]}>
+                <View style={[PhonicsChallengeStyles.badgeBanner, { right: 0, backgroundColor: colors.softOrange }]}><Text style={PhonicsChallengeStyles.badgeBannerText}>CHALLENGE</Text></View>
                 {challengeStarted && currentChallenge ? (
                     <>
                         <Image
@@ -79,23 +81,25 @@ const PhonicsChallenge = () => {
                             {currentChallenge.options.map((option) => (
                                 <TouchableOpacity
                                     key={option}
-                                    style={PhonicsChallengeStyles.actionButton}
+                                    style={PhonicsChallengeStyles.pillButton}
                                     onPress={() => handleAnswer(option)}
                                 >
-                                    <Text style={PhonicsChallengeStyles.actionButtonText}>{option}</Text>
+                                    <Text style={PhonicsChallengeStyles.pillButtonText}>{option}</Text>
                                 </TouchableOpacity>
                             ))}
                         </View>
+                        {/* Placeholder for character, potentially styled with custom text */}
                         <Text style={PhonicsChallengeStyles.challengeText}>Blue alien character</Text>
                     </>
                 ) : (
-                    <TouchableOpacity style={PhonicsChallengeStyles.actionButton} onPress={startChallenge}>
-                        <Text style={PhonicsChallengeStyles.actionButtonText}>START TEST</Text>
+                    <TouchableOpacity style={PhonicsChallengeStyles.pillButton} onPress={startChallenge}>
+                        <Text style={PhonicsChallengeStyles.pillButtonText}>START TEST</Text>
                     </TouchableOpacity>
                 )}
             </View>
         </View>
     );
 };
+
 
 export default PhonicsChallenge;

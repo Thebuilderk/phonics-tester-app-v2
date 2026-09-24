@@ -5,10 +5,11 @@ import typography from './typography';
 const HomeScreenStyles = StyleSheet.create({
     safeArea: {
         flex: 1,
-        backgroundColor: colors.background,
+        // backgroundColor: colors.background,
     },
     container: {
         flex: 1,
+        // backgroundColor: colors.background,
     },
     headerTabs: {
         flexDirection: 'row',

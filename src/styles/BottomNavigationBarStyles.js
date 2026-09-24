@@ -1,37 +1,41 @@
 import { StyleSheet } from 'react-native';
 import colors from './colors';
+import typography from './typography';
+import GlobalStyles from './GlobalStyles';
 
 const BottomNavigationBarStyles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    backgroundColor: colors.bottomNavBackground,
     paddingVertical: 10,
-    borderTopWidth: 1,
-    borderColor: colors.border,
+    // Removed traditional bottom nav background and border
   },
   navItem: {
-    alignItems: 'center',
+    ...GlobalStyles.pillButton,
+    backgroundColor: colors.primary,
   },
   navIcon: {
     fontSize: 24,
-    color: colors.inactiveIcon,
+    color: colors.white,
     marginBottom: 4,
+    ...GlobalStyles.pillButtonText, // Apply font and shadow from pillButtonText
   },
   navText: {
-    fontSize: 12,
-    color: colors.inactiveIcon,
+    ...typography.body,
+    color: colors.white,
+    fontWeight: 'normal',
+    ...GlobalStyles.pillButtonText, // Apply font and shadow from pillButtonText
   },
   activeNavItem: {
-    // Styles for active navigation item if needed
+    backgroundColor: colors.accent, // Active item color
   },
   activeNavIcon: {
-    color: colors.activeIcon,
+    color: colors.white,
   },
   activeNavText: {
-    color: colors.activeIcon,
-    fontWeight: 'bold',
+    color: colors.white,
+    fontWeight: 'normal',
   },
   touchableNavItem: {
     alignItems: 'center',

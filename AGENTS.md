@@ -1,3 +1,20 @@
-# Expo HAS CHANGED
+\# OpenClaw Workspace Instructions
 
-Read the exact versioned docs at https://docs.expo.dev/versions/v57.0.0/ before writing any code.
+
+
+\## Directory Rules
+
+\- \*\*Workspace Root:\*\* `C:\\Users\\Kevin\\.openclaw\\workspaces\\dev\\phonics-tester-app-v2`
+
+\- Always verify you are executing terminal commands from the workspace root.
+
+
+
+\## Build \& Source Rules
+
+\- Never edit files in `dist/` directly—`dist/` is an auto-generated output folder.
+
+\- Always modify source files in `./src`, `./public`, or root-level templates (`index.html`, `App.tsx`, `package.json`).
+
+\- Production builds are generated using `npx expo export -p web`.
+

@@ -1,4 +1,4 @@
-export const Colors = {
+export default {
   primary: '#4285F4', // Google Blue
   primaryDark: '#3367D6',
   secondary: '#34A853', // Google Green
@@ -16,6 +16,14 @@ export const Colors = {
   warning: '#FFC107',
   info: '#17A2B8',
   darkBlue: '#0A3D62', // A darker shade of blue for text
+  softBlue: '#4FC3F7',
+  softOrange: '#FFB74D',
+  softGreen: '#81C784',
+  primaryText: '#333333',
+  secondaryBackground: '#E0E0E0',
+  gold: '#FFD700',
+  buttonText: '#FFFFFF',
+  bottomNavBackground: '#FFFFFF',
+  inactiveIcon: '#9E9E9E',
+  activeIcon: '#4285F4',
 };
-
-export default Colors;

@@ -6,6 +6,7 @@ import {
   SafeAreaView,
   StatusBar,
   ActivityIndicator,
+  ImageBackground,
 } from 'react-native';
 import * as SplashScreen from 'expo-splash-screen';
 import { useFonts, Chewy_400Regular } from '@expo-google-fonts/chewy';
@@ -74,18 +75,25 @@ export default function App() {
   }
 
   return (
-    <View style={styles.container} onLayout={onLayoutRootView}>
+    <ImageBackground source={require('./assets/bg_landscape.png')} style={styles.background}>
       <StatusBar barStyle="dark-content" backgroundColor="#D8F3DC" />
       <ErrorBoundary>
         <HomeScreen />
       </ErrorBoundary>
-    </View>
+    </ImageBackground>
   );
 }
 
 registerRootComponent(App);
 
 const styles = StyleSheet.create({
+  background: {
+    flex: 1,
+    resizeMode: 'cover',
+  },
+  gradientContainer: {
+    flex: 1,
+  },
   container: {
     flex: 1,
   },

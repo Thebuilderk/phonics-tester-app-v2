@@ -8,11 +8,12 @@ interface NavigationBarProps {
   setActiveTab: (tab: TabType) => void;
 }
 
+// Relative paths updated for root directory location
 const NAVIGATION_ICONS: Record<string, any> = {
-  home: require('./assets/sun_logo.png'), // Using sun_logo.png as a placeholder for home
-  games: require('./assets/nav_games.png'),
-  stories: require('./assets/nav_stories.png'),
-  stuff: require('./assets/nav_stuff.png'),
+  home: require('../../assets/sun_logo.png'),
+  games: require('../../assets/nav_games.png'),
+  stories: require('../../assets/nav_stories.png'),
+  stuff: require('../../assets/nav_stuff.png'),
 };
 
 export default function NavigationBar({ activeTab, setActiveTab }: NavigationBarProps) {
@@ -48,13 +49,13 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    height: 75, // Increased height for icons and labels
-    backgroundColor: '#8a2be2', // Blue violet
+    height: 75,
+    backgroundColor: '#8a2be2',
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
     borderTopWidth: 5,
-    borderTopColor: '#6a0dad', // Darker blue violet
+    borderTopColor: '#6a0dad',
   },
   dockItem: {
     alignItems: 'center',
@@ -63,7 +64,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   dockActive: {
-    backgroundColor: '#9370DB', // Medium Purple for active tab
+    backgroundColor: '#9370DB',
   },
   dockIcon: {
     width: 30,

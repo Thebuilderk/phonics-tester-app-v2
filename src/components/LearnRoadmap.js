@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import LearnRoadmapStyles from '../styles/LearnRoadmapStyles';
 import learnRoadmapData from '../data/learnRoadmapData';
+import colors from '../styles/colors'; // Added import for colors
 
 const LearnRoadmap = () => {
     const [phases, setPhases] = useState(learnRoadmapData.phases);
@@ -51,8 +52,9 @@ const LearnRoadmap = () => {
             </View>
 
             {phases.map(phase => (
-                <View key={phase.id} style={LearnRoadmapStyles.roadmapItem}>
-                    <Text style={LearnRoadmapStyles.itemText}>{phase.name}</Text>
+                <View key={phase.id} style={[LearnRoadmapStyles.cardContainer, LearnRoadmapStyles.roadmapItem]}>
+                    <View style={[LearnRoadmapStyles.badgeBanner, { left: 0, paddingHorizontal: 15 }]}><Text style={LearnRoadmapStyles.badgeBannerText}>PHASE {phase.id}</Text></View>
+                    <Text style={LearnRoadmapStyles.title}>{phase.name}</Text>
                     {phase.checkpoints.map(checkpoint => (
                         <TouchableOpacity
                             key={checkpoint.id}
@@ -68,20 +70,23 @@ const LearnRoadmap = () => {
                 </View>
             ))}
 
-            <Text style={LearnRoadmapStyles.title}>REWARDS</Text>
+            <View style={LearnRoadmapStyles.cardContainer}>
+            <View style={[LearnRoadmapStyles.badgeBanner, { left: 0, paddingHorizontal: 15 }]}><Text style={LearnRoadmapStyles.badgeBannerText}>COLLECT REWARDS</Text></View>
             {rewards.map(reward => (
                 <TouchableOpacity
                     key={reward.id}
-                    style={LearnRoadmapStyles.rewardContainer}
+                    style={LearnRoadmapStyles.rewardButton}
                     onPress={() => collectReward(reward.id)}
                 >
-                    <Text style={LearnRoadmapStyles.rewardText}>
+                    <Text style={LearnRoadmapStyles.rewardButtonText}>
                         {reward.collected ? '🏆' : '🎁'} {reward.name}
                     </Text>
                 </TouchableOpacity>
             ))}
+            </View>
 
-            <View style={LearnRoadmapStyles.roadmapItem}>
+            <View style={[LearnRoadmapStyles.cardContainer, {borderColor: colors.softGreen}]}>
+                <Text style={LearnRoadmapStyles.title}>PROGRESS</Text>
                 <Text style={LearnRoadmapStyles.itemText}>Overall Progress: {overallProgress.toFixed(0)}%</Text>
                 <Text style={LearnRoadmapStyles.itemText}>Current Level: {currentLevel}/{learnRoadmapData.totalLevels}</Text>
             </View>
