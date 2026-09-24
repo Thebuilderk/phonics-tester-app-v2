@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, SafeAreaView } from 'react-native';
-import HomeScreen from './screens/HomeScreen';
-import GamesScreen from './screens/GamesScreen';
-import LearnRoadmapScreen from './screens/LearnRoadmapScreen';
-import StoriesScreen from './screens/StoriesScreen';
-import ProgressScreen from './screens/ProgressScreen';
-import RewardsScreen from './screens/RewardsScreen';
-import TestScreen from './screens/TestScreen';
+
+import HomeScreen from './src/screens/HomeScreen';
+import GamesScreen from './src/screens/GamesScreen';
+import LearnRoadmapScreen from './src/screens/LearnRoadmapScreen';
+import StoriesScreen from './src/screens/StoriesScreen';
+
+import ProgressScreen from './src/screens/ProgressScreen';
+import RewardsScreen from './src/screens/RewardsScreen';
+import TestScreen from './src/screens/TestScreen';
 import BottomNavigationBar from './components/BottomNavigationBar';
 
 export type ScreenName = 
